@@ -25,6 +25,8 @@ public class ArgumentHolder {
 	protected ArgumentHolder(String[] args) {
 		List<String> parameterlessOptions=Arrays.asList(Main.parameterlessOtions);
 		List<String> parameterOptions=Arrays.asList(Main.parameterOptions);
+		options=new HashSet<>();
+		paramOptions=new HashMap<>();
 		for(int i=0;i<args.length;i++) {
 			String arg=args[i].toLowerCase();
 			if(parameterlessOptions.contains(arg)) {

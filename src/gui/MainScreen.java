@@ -41,6 +41,7 @@ public class MainScreen extends JPanel{
 	
 	/**
 	 * Open the application to the default menu screen
+	 * 
 	 * @since 1/14/2017
 	 */
 	public static final int MENU_SCREEN=0;
@@ -63,6 +64,9 @@ public class MainScreen extends JPanel{
 	private class NorthSubPanel extends JPanel{
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Create a new NorthSubPanel
+		 */
 		public NorthSubPanel() {
 			setLayout(new BorderLayout());
 		}
