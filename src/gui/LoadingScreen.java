@@ -13,9 +13,9 @@ import javax.swing.JPanel;
  * @version 1/14/2017
  * @since 1/14/2017
  */
-@SuppressWarnings("serial")
 public class LoadingScreen extends JPanel {
-	
+	private static final long serialVersionUID = 1L;
+
 	public LoadingScreen() {
 		setLayout(new FlowLayout());
 		

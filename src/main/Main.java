@@ -28,7 +28,7 @@ public final class Main {
 	 * 
 	 * <p>Command line arguments that can be passed:<table>
 	 * <tr> <td>Argument</td>				<td>Meaning</td> </tr>
-	 * <tr> <td> -c</br> --Justcheck</td>	<td>Only check Aeries and not activate the GUI for anythin.</td></tr> 
+	 * <tr> <td> -c</br> --justcheck</td>	<td>Only check Aeries and not activate the GUI for anything.</td></tr> 
 	 * </table>
 	 * 
 	 * @param args The command line arguments given to it.
