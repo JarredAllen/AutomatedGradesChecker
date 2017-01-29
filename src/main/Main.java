@@ -16,7 +16,7 @@ import test.DebugLog;
  * The class that the application runs immediately upon startup.
  * 
  * @author Jarred
- * @version 1/14/2017
+ * @version 1/15/2017
  * @since 1/14/2017
  */
 public final class Main {
@@ -57,13 +57,15 @@ public final class Main {
 		
 		//load into memory
 		Loader loader=new Loader();
-		new Thread(loader).run();
-		try {
-			synchronized(lock) {
-				lock.wait();
-			}
-		} catch (InterruptedException e) {}
-		DebugLog.logStatement("Main has resumed. (concurrency)", DebugLog.DEBUG_RECENT_CODE);
+		new Thread(loader).start();
+		while(!loader.isLoaded()) {
+			try {
+				synchronized(lock) {
+					lock.wait();
+				}
+			} catch (InterruptedException e) {}
+		}
+		DebugLog.logStatement("Main has resumed. (concurrency)", DebugLog.CONCURRENCY_LOG_CODE);
 		JFrame frame=new JFrame();
 		frame.setContentPane(new MainScreen());
 		frame.setSize(frameSize, frameSize);
