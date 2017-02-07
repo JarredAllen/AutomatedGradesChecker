@@ -13,6 +13,7 @@ import javax.swing.JPanel;
  * @version 2/6/2017
  * @since 2/6/2017
  */
+@SuppressWarnings("serial")
 public class ImageDisplay extends JPanel {
 	
 	private ImageIcon image;
