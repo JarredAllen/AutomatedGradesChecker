@@ -2,13 +2,14 @@ package gui;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
  * The class that handles the main window of the application once it loads.
  * 
  * @author Jarred
- * @version 1/14/2017
+ * @version 2/6/2017
  * @since 1/14/2017
  */
 public class MainScreen extends JPanel{
@@ -32,9 +33,15 @@ public class MainScreen extends JPanel{
 		setLayout(new BorderLayout());
 		northPanel=new NorthSubPanel();
 		add(northPanel, BorderLayout.NORTH);
+		JPanel centerPanel=null;
 		switch(screenCode) {
+		case MENU_SCREEN:
+			centerPanel=new GradesOverview();
+			break;
+			
 			//TODO: Insert a center panel based on the selection of the user for their screen.
 		}
+		add(centerPanel, BorderLayout.CENTER);
 	}
 	
 	//Constants because magic numbers are bad
@@ -69,6 +76,9 @@ public class MainScreen extends JPanel{
 		 */
 		public NorthSubPanel() {
 			setLayout(new BorderLayout());
+			JLabel label=new JLabel("Welcome.");
+			
+			add(label);
 		}
 	}
 }

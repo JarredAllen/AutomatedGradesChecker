@@ -1,40 +1,53 @@
 package web;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.io.IOException;
 import java.io.InputStream;
 
-public final class WebConnectionManager {
+/**
+ * An interface for connecting to the grades online
+ * 
+ * @author Jarred
+ * @version 2/6/2017
+ * @since 2/6/2017
+ */
+public interface WebConnectionManager {
+	/**
+	 * @return The <code>InputStream</code> object associated with the connection to the page showing all of the grades.
+	 */
+	InputStream getMainGradesPage();
 	
-	public static InputStream getMainGradesPage() {
+	/**
+	 * 
+	 * @author Jarred
+	 * @version 2/6/2017
+	 * @since 2/6/2017
+	 */
+	public static final class Builder {
+		private String webResourceName;
 		
-		return (InputStream)null;
-	}
-	
-	//Constants
-	public static final String aeriesLoginURL;
-	public static final String aeriesGradesURL;
-	
-	private static String aeriesSessionIDCookie;//TODO: Initialize this
-	
-	static {
-		aeriesLoginURL="https://mystudent.fjuhsd.net/Parent/LoginParent.aspx";
-		aeriesGradesURL="https://mystudent.fjuhsd.net/Parent/GradebookSummary.aspx";
-		try {
-			URL login=new URL(aeriesLoginURL);
-			login.openConnection();
+		/**
+		 * Creates a builder that builds a WebConnectionManager that accesses the Aeries site run by FJUHSD
+		 */
+		public Builder() {
+			this("FJUHSD_Aeries");
 		}
-		catch(MalformedURLException e) {
-			//TODO: Handle a malformed url
-			e.printStackTrace();
-		} catch (IOException e) {
-			//TODO: Handle another exception in connecting to a url
-			e.printStackTrace();
+		
+		/**
+		 * Creates a builder that builds a WebConnectionManager that accesses the Aeries site run by FJUHSD
+		 * 
+		 * @param webResourceName The name of the site. Valid names include the following: <ul><li>FJUHSD_Aeries</li></ul>
+		 */
+		public Builder(String webResourceName) {
+			this.webResourceName=webResourceName;
+		}
+		
+		/**
+		 * Builds a complete WebConnectionManager using the arguments already passed into it
+		 * 
+		 * @return A complete WebConnectionManager
+		 */
+		public WebConnectionManager build() {
+			
+			return null; //this is only run if it is given an invalid webResourceName
 		}
 	}
-	
-	//just here to make it a static class
-	private WebConnectionManager(){}
 }
