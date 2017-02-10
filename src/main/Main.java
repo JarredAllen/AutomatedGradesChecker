@@ -23,7 +23,7 @@ public final class Main {
 
 	public static ArgumentHolder ah;
 
-	public static final String[] parameterlessOtions={"-c", "-justcheck"};
+	public static final String[] parameterlessOtions={"-c", "-justcheck", "-d", "--debug"};
 	public static final String[] parameterOptions={};
 	
 	public static final Object lock=new Object();
@@ -36,6 +36,7 @@ public final class Main {
 	 * <table border="1">
 	 * <tr> <td><strong>Argument</strong></td>		<td><strong>Meaning</strong></td> </tr>
 	 * <tr> <td> -c</br> --justcheck</td>			<td>Only check for updates and not activate the GUI for anything.</td></tr> 
+	 * <tr> <td> -d</br> --debug</td>				<td>Have extra debugging information printed out.</td>
 	 * </table>
 	 * 
 	 * @param args The command line arguments given to it.

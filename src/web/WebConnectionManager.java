@@ -6,7 +6,7 @@ import java.io.InputStream;
  * An interface for connecting to the grades online
  * 
  * @author Jarred
- * @version 2/6/2017
+ * @version 2/9/2017
  * @since 2/6/2017
  */
 public interface WebConnectionManager {
@@ -14,6 +14,12 @@ public interface WebConnectionManager {
 	 * @return The <code>InputStream</code> object associated with the connection to the page showing all of the grades.
 	 */
 	InputStream getMainGradesPage();
+	
+
+	/**
+	 * Builds all of the appropriate Class objects for the user's schedule
+	 */
+	void fillInGrades();
 	
 	/**
 	 * 
@@ -44,10 +50,16 @@ public interface WebConnectionManager {
 		 * Builds a complete WebConnectionManager using the arguments already passed into it
 		 * 
 		 * @return A complete WebConnectionManager
+		 * @throws IllegalStateException if the resource name is incorrect
 		 */
 		public WebConnectionManager build() {
-			
-			return null; //this is only run if it is given an invalid webResourceName
+			switch(webResourceName) {
+			case "FJUHSD_Aeries":
+				return new FJUHSDAeriesConnectionManager();
+				
+			default:
+				throw new IllegalStateException(); //this is only run if it is given an invalid webResourceName
+			}
 		}
 	}
 }

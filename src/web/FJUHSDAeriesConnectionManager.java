@@ -3,6 +3,9 @@ package web;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import test.DebugLog;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -10,7 +13,7 @@ import java.io.InputStream;
  * Retrieves grades from the Aeries site maintained by FJUHSD
  * 
  * @author Jarred
- * @version 2/6/2017
+ * @version 2/9/2017
  * @since 2/6/2017
  */
 public final class FJUHSDAeriesConnectionManager implements WebConnectionManager{
@@ -39,13 +42,28 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	 * @inheritDoc
 	 */
 	public InputStream getMainGradesPage() {
-		//TODO Implement this
+		//TODO Implement getMainGradesPage()
 		return (InputStream)null;
+	}
+	
+	@Override
+	/**
+	 * @inheritDoc
+	 */
+	public void fillInGrades() {
+		try {
+			InputStream data=getMainGradesPage();
+			data.close();
+		}
+		catch(IOException ioe) {
+			DebugLog.logStatement("Failed connecting to Aeries", DebugLog.FAILURE_LOG_CODE);
+		}
+		//TODO Implement fillInGrades()
 	}
 	
 	//Constants
 	private final String aeriesLoginURL;
 	private final String aeriesGradesURL;
 	
-	private static String aeriesSessionIDCookie;//TODO: Initialize this
+	private static String aeriesSessionIDCookie;//TODO: Initialize the SessionIDCookie
 }

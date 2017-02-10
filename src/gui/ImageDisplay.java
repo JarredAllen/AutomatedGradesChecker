@@ -10,13 +10,13 @@ import javax.swing.JPanel;
  * A simple JPanel for displaying an image
  * 
  * @author Jarred
- * @version 2/6/2017
+ * @version 2/9/2017
  * @since 2/6/2017
  */
 @SuppressWarnings("serial")
 public class ImageDisplay extends JPanel {
 	
-	private ImageIcon image;
+	protected ImageIcon image;
 	
 	/**
 	 * Creates a new ImageDisplay from a filename

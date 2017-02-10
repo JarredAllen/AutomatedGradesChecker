@@ -9,7 +9,7 @@ import javax.swing.JPanel;
  * The class that handles the main window of the application once it loads.
  * 
  * @author Jarred
- * @version 2/6/2017
+ * @version 2/9/2017
  * @since 1/14/2017
  */
 public class MainScreen extends JPanel{
@@ -21,7 +21,7 @@ public class MainScreen extends JPanel{
 	 * Creates a new MainScreen object
 	 */
 	public MainScreen() {
-		this(MENU_SCREEN);
+		this(LOGIN_SCREEN);
 	}
 	
 	/**
@@ -39,6 +39,8 @@ public class MainScreen extends JPanel{
 			centerPanel=new GradesOverview();
 			break;
 			
+		case LOGIN_SCREEN:
+			centerPanel=new LoginScreen();
 			//TODO: Insert a center panel based on the selection of the user for their screen.
 		}
 		add(centerPanel, BorderLayout.CENTER);
@@ -51,15 +53,13 @@ public class MainScreen extends JPanel{
 	 * 
 	 * @since 1/14/2017
 	 */
-	public static final int MENU_SCREEN=0;
+	public static final int MENU_SCREEN=1;
 	/**
-	 * Open the application to the screen for grades in one specific class.
-	 *  <p>
-	 *  The code to be passed in is this number plus the period of the class that is being shown in-depth
-	 *  
-	 *  @since 1/14/2017
+	 * Open the application to the login screen
+	 * 
+	 * @since 2/9/2017
 	 */
-	public static final int GRADES_SCREEN=16;
+	public static final int LOGIN_SCREEN=2;
 	
 	/**
 	 * The subpanel used to populate the northern part of the MainScreen
