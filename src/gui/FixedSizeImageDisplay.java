@@ -7,22 +7,35 @@ import javax.swing.ImageIcon;
 /**
  * A JPanel that is used to display an image at a specific size.
  * 
- * @author Jarred
+ * @author Jarred Koichi
  * @version 2/10/2017
  * @since 2/9/2017
  */
 @SuppressWarnings("serial")
-public class FixedSizeImageDisplay extends ImageDisplay {
+public class FixedSizeImageDisplay extends ImageDisplay { //hi im koichi
 	//The sizes of the image that it displays
 	private int xSize;
 	private int ySize;
-
+	/**
+	* FixedSizeImageDisplay
+	* @param image is the file that is used for the gui image
+	* @param xSize is the width of the image
+	* @param ySize is the height of the image
+	* creates the gui using image as the ImageIcon and the set dimensions
+	**/
 	public FixedSizeImageDisplay(ImageIcon image, int xSize, int ySize) {
 		super(image);
 		this.xSize=xSize;
 		this.ySize=ySize;
 	}
 	
+	/**
+	* FixedSizeImageDisplay
+	* @param filename is the name of the file
+	* @param xSize is the width of the image
+	* @param ySize is the height of the image
+	* creates the Imageicon using the inported image and setting the new borders using the xSize and ySize
+	**/
 	public FixedSizeImageDisplay(String filename, int xSize, int ySize) {
 		this(new ImageIcon(filename), xSize, ySize);
 	}
