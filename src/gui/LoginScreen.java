@@ -1,8 +1,12 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.util.ArrayList;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -11,7 +15,7 @@ import javax.swing.JTextField;
  * A JPanel that shows the login screen for the user to log in.
  * 
  * @author Jarred
- * @version 2/9/2017
+ * @version 2/12/2017
  * @since 2/9/2017
  */
 @SuppressWarnings("serial")
@@ -30,15 +34,17 @@ public class LoginScreen extends JPanel {
 		responders=new ArrayList<>();
 		
 		setLayout(new BorderLayout());
-		add(new FixedSizeImageDisplay("res/img/GroupLogo.png", 300, 350), BorderLayout.NORTH);
-			//TODO The above line does not work, figure out why
 		
 		JPanel centerPanel=new JPanel();
-		username=new JTextField();
-		password=new JPasswordField();
+		centerPanel.setLayout(new FlowLayout());
+		username=new JTextField(35);
+		password=new JPasswordField(35);
+		centerPanel.add(new JLabel("Username: "));
 		centerPanel.add(username);
+		centerPanel.add(new JLabel("Password: "));
 		centerPanel.add(password);
 		add(centerPanel, BorderLayout.CENTER);
+		add(new JButton("Submit"), BorderLayout.SOUTH);
 	}
 	
 	/**

@@ -9,7 +9,7 @@ import javax.swing.JPanel;
  * The class that handles the main window of the application once it loads.
  * 
  * @author Jarred
- * @version 2/9/2017
+ * @version 2/11/2017
  * @since 1/14/2017
  */
 public class MainScreen extends JPanel{
@@ -77,8 +77,9 @@ public class MainScreen extends JPanel{
 		public NorthSubPanel() {
 			setLayout(new BorderLayout());
 			JLabel label=new JLabel("Welcome.");
-			
 			add(label);
+			
+			add(new FixedSizeImageDisplay("res/img/GroupLogo.png", 300, 350), BorderLayout.NORTH);
 		}
 	}
 }
