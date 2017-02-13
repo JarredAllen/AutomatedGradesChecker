@@ -9,13 +9,15 @@ import javax.swing.JPanel;
  * The class that handles the main window of the application once it loads.
  * 
  * @author Jarred
- * @version 2/11/2017
+ * @version 2/12/2017
  * @since 1/14/2017
  */
 public class MainScreen extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private NorthSubPanel northPanel;
+	
+	private JPanel centerPanel;
 	
 	/**
 	 * Creates a new MainScreen object
@@ -33,7 +35,6 @@ public class MainScreen extends JPanel{
 		setLayout(new BorderLayout());
 		northPanel=new NorthSubPanel();
 		add(northPanel, BorderLayout.NORTH);
-		JPanel centerPanel=null;
 		switch(screenCode) {
 		case MENU_SCREEN:
 			centerPanel=new GradesOverview();
@@ -44,6 +45,13 @@ public class MainScreen extends JPanel{
 			//TODO: Insert a center panel based on the selection of the user for their screen.
 		}
 		add(centerPanel, BorderLayout.CENTER);
+	}
+	
+	/**
+	 * 
+	 */
+	public void showLoginScreen(LoginScreen.LoginResponder lr) {
+		
 	}
 	
 	//Constants because magic numbers are bad
