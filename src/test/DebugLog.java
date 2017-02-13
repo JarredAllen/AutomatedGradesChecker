@@ -8,7 +8,7 @@ import main.Main;
  * The class that logs any statements that may be useful for debugging
  * 
  * @author Jarred
- * @version 1/15/2017
+ * @version 2/13/2017
  * @since 1/14/2017
  */
 public final class DebugLog {
@@ -27,39 +27,44 @@ public final class DebugLog {
 	 */
 	public static void logStatement(String line, int tag) {
 		log.add(line);
-		if(Main.ah.containsOption("-d")||Main.ah.containsOption("-debug")) {
-			System.out.println(line);
-		}
-		else {
-			switch(tag) {
-			case CONCURRENCY_LOG_CODE:
-				log.add(line+" (concurrency)");
-				if(isDebuggingAll) {
-					System.out.println("DEBUG LOG: "+line+" (concurrency)");
-				}
-				break;
-
-			case INTERNET_LOG_CODE:
-				log.add(line+" (internet)");
-				if(isDebuggingAll) {
-					System.out.println("DEBUG LOG: "+line+" (internet)");
-				}
-				break;
-
-			case FAILURE_LOG_CODE:
-				log.add(line+" (failure)");
-				if(isDebuggingCurrentDevelopment) {
-					System.out.println("DEBUG LOG: "+line+" (failure)");
-				}
-				break;
-			
-				default:
-					log.add(line+" (unknown type)");
-					if(isDebuggingCurrentDevelopment) {
-						System.out.println("DEBUG LOG: "+line+" (unknown type)");
+		try {
+			if(Main.ah.containsOption("-d")||Main.ah.containsOption("-debug")) {
+				System.out.println(line);
+			}
+			else {
+				switch(tag) {
+				case CONCURRENCY_LOG_CODE:
+					log.add(line+" (concurrency)");
+					if(isDebuggingAll) {
+						System.out.println("DEBUG LOG: "+line+" (concurrency)");
 					}
 					break;
+
+				case INTERNET_LOG_CODE:
+					log.add(line+" (internet)");
+					if(isDebuggingAll) {
+						System.out.println("DEBUG LOG: "+line+" (internet)");
+					}
+					break;
+
+				case FAILURE_LOG_CODE:
+					log.add(line+" (failure)");
+					if(isDebuggingCurrentDevelopment) {
+						System.out.println("DEBUG LOG: "+line+" (failure)");
+					}
+					break;
+				
+					default:
+						log.add(line+" (unknown type)");
+						if(isDebuggingCurrentDevelopment) {
+							System.out.println("DEBUG LOG: "+line+" (unknown type)");
+						}
+						break;
+				}
 			}
+		}
+		catch(NullPointerException npe) {
+			System.out.println("NPE in DebugLog. This should not happen if run from Main, but will otherwise happen.");
 		}
 	}
 	

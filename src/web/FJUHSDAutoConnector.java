@@ -14,10 +14,11 @@ import javax.swing.Timer;
 import test.DebugLog;
 
 /**
- * Automatically connects to 
+ * Automatically connects to the FJUHSD Aeries site to prevent login timeouts while the application is running.
  * 
  * @author Jarred
- *
+ * @version 2/13/2017
+ * @since 2/12/2017
  */
 public class FJUHSDAutoConnector implements AutoConnector {
 	
@@ -57,7 +58,7 @@ public class FJUHSDAutoConnector implements AutoConnector {
 	public void reconnect() {
 		try {
 			URLConnection grades=new URL(FJUHSDAeriesConnectionManager.aeriesGradesURL).openConnection();
-			//TODO Add the cookie to the connection
+			grades.setRequestProperty("Cookie", sessionCookie);
 			grades.connect();
 			//just go through the data to be cautious
 			Scanner input=new Scanner(grades.getInputStream());

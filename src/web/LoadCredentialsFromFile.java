@@ -15,7 +15,7 @@ import java.util.Scanner;
  */
 public class LoadCredentialsFromFile {
 	
-	public static final String credentialsFileLocation="src/web/LoginCredentials.txt";
+	public static final String credentialsFileLocation="res/txt/LoginCredentials.txt";
 	
 	/**
 	 * Check the file storing login credentials to see if it has any remembered credentials
@@ -117,6 +117,8 @@ public class LoadCredentialsFromFile {
 		}
 	}
 	
+	
+	//Everything after this point is only for debugging purposes
 	
 	/**
 	 * Only here for testing purposes

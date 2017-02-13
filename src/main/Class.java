@@ -25,12 +25,14 @@ public class Class implements Comparable<Class>{
 	static {
 		classes=new ArrayList<Class>();
 		
-		//TODO Comment this stuff out when done testing
+		/*
+		 * Commented out code because this is just to be used for testing purposes
 		new Class(0,"H-Chem", .907, "Jan 1");
 		new Class(1,"AP Lang", .873, "Jan 3");
 		new Class(2,"Pre-Calc H", .913, "Feb 4");
 		new Class(3,"Band", 1.0, "Aug 12");
 		new Class(4,"History", .666, "Feb 6");
+		*/
 	}
 	
 	/**

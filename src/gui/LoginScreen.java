@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -20,7 +21,7 @@ import web.LoadCredentialsFromFile;
  * A JPanel that shows the login screen for the user to log in.
  * 
  * @author Jarred
- * @version 2/12/2017
+ * @version 2/13/2017
  * @since 2/9/2017
  */
 @SuppressWarnings("serial")
@@ -53,7 +54,9 @@ public class LoginScreen extends JPanel implements ActionListener {
 		centerPanel.add(password);
 		centerPanel.add(rememberLogin);
 		add(centerPanel, BorderLayout.CENTER);
-		add(new JButton("Submit"), BorderLayout.SOUTH);
+		JButton submitButton=new JButton("Submit");
+		submitButton.addActionListener(this);
+		add(submitButton, BorderLayout.SOUTH);
 	}
 	
 	/**
@@ -83,7 +86,12 @@ public class LoginScreen extends JPanel implements ActionListener {
 		String uname=username.getText();
 		String pass=new String(password.getPassword());
 		if(uname.equals("")) {
-			//TODO Finish error checking
+			JOptionPane.showMessageDialog(null, "Please input a username");
+			return;
+		}
+		if(pass.equals("")) {
+			JOptionPane.showMessageDialog(null, "Please input a password");
+			return;
 		}
 		if(rememberLogin.isSelected()) {
 			LoadCredentialsFromFile.setCredentials(uname, pass);
