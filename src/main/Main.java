@@ -16,7 +16,7 @@ import test.DebugLog;
  * The class that the application runs immediately upon startup.
  * 
  * @author Jarred
- * @version 1/15/2017
+ * @version 2/12/2017
  * @since 1/14/2017
  */
 public final class Main {

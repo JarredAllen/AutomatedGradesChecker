@@ -32,13 +32,27 @@ public final class DebugLog {
 		}
 		else {
 			switch(tag) {
-				case CONCURRENCY_LOG_CODE:
-					log.add(line+" (concurrency)");
-					if(isDebuggingAll) {
-						System.out.println("DEBUG LOG: "+line+" (concurrency)");
-					}
-					break;
-				
+			case CONCURRENCY_LOG_CODE:
+				log.add(line+" (concurrency)");
+				if(isDebuggingAll) {
+					System.out.println("DEBUG LOG: "+line+" (concurrency)");
+				}
+				break;
+
+			case INTERNET_LOG_CODE:
+				log.add(line+" (internet)");
+				if(isDebuggingAll) {
+					System.out.println("DEBUG LOG: "+line+" (internet)");
+				}
+				break;
+
+			case FAILURE_LOG_CODE:
+				log.add(line+" (failure)");
+				if(isDebuggingCurrentDevelopment) {
+					System.out.println("DEBUG LOG: "+line+" (failure)");
+				}
+				break;
+			
 				default:
 					log.add(line+" (unknown type)");
 					if(isDebuggingCurrentDevelopment) {
@@ -84,6 +98,13 @@ public final class DebugLog {
 	 * @see #logStatement(String, int)
 	 */
 	public static final int FAILURE_LOG_CODE=2;
+	/**
+	 * Used to indicate that the logged statement pertains to connecting to internet webpages.
+	 * 
+	 * @since 2/12/2017
+	 * @see #logStatement(String, int)
+	 */
+	public static final int INTERNET_LOG_CODE=3;
 	
 	//Ignore this, this just makes it a static class.
 	private DebugLog(){}
