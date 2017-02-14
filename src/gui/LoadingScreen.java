@@ -10,7 +10,7 @@ import javax.swing.JPanel;
  * The loading screen that is displayed when the application is first booted up.
  * 
  * @author Jarred
- * @version 2/6/2017
+ * @version 2/13/2017
  * @since 1/14/2017
  */
 public class LoadingScreen extends JPanel {
@@ -21,8 +21,6 @@ public class LoadingScreen extends JPanel {
 		add(new ImageDisplay("res/img/GroupLogo.png"), BorderLayout.CENTER);
 		add(new JLabel("Loading our wonderful app..."), BorderLayout.SOUTH);
 	}
-	
-	//TODO Draw the loading screen for the user.
 	
 	@Override
 	public void paintComponent(Graphics g) {
