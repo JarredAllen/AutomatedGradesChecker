@@ -1,19 +1,21 @@
 package web;
 
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import java.nio.charset.StandardCharsets;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import test.DebugLog;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 
 /**
  * Retrieves grades from the Aeries site maintained by FJUHSD
@@ -43,28 +45,19 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 					}
 				}
 			}
-			HttpURLConnection httpConnection=(HttpURLConnection)login.openConnection();
+			HttpsURLConnection httpConnection=(HttpsURLConnection)new URL(aeriesGradesURL).openConnection();
 			httpConnection.setRequestProperty("Cookie", aeriesSessionIDCookie);
 			httpConnection.setRequestMethod("POST");
 			httpConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			String post="";
 			String username="justjarred@hotmail.com";
-			String password="Nice try";
-			String message=String.format("CheckMobileDevice=false & CheckStandaloneMode=false & CheckTabletDevice=false & PortalAccountUsername=%s, PortalAccountPassword=%s & PortalAccountUsernameLabel & Submit",
+			String password="ha, losers";
+			String message=String.format("CheckCookiesEnabled=true&CheckMobileDevice=false&CheckStandaloneMode=false&CheckTabletDevice=false&PortalAccountUsername=%s&PortalAccountPassword=%s&PortalAccountUsernameLabel&Submit",
 											username, password);
-			//httpConnection.setRequestProperty("Content-Length", String.valueOf(message.length()));
-			post=post.concat(message);
-			httpConnection.setRequestProperty("PortalAccountUsernameLabel", "");
-			httpConnection.setRequestProperty("Submit", "");
+			httpConnection.setRequestProperty("Content-Length", String.valueOf(message.getBytes(StandardCharsets.UTF_8).length));
+			httpConnection.setDoOutput(true);
+			httpConnection.getOutputStream().write(message.getBytes(StandardCharsets.UTF_8));
 			httpConnection.connect();
-			Scanner input;
-			if(httpConnection.getResponseCode()==200) {
-				input=new Scanner(httpConnection.getInputStream());
-			}
-			else {
-				input=new Scanner(httpConnection.getErrorStream());
-				//TODO: Why does this keep erroring?
-			}
+			Scanner input=new Scanner(httpConnection.getInputStream());
 			while(input.hasNextLine()) {
 				System.out.println(input.nextLine());
 			}
@@ -83,6 +76,7 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 			DebugLog.logStatement("Failed connecting to Aeries", DebugLog.FAILURE_LOG_CODE);
 			System.exit(1);
 		}
+		System.out.println(aeriesSessionIDCookie);
 		FJUHSDAutoConnector ac=new FJUHSDAutoConnector(aeriesSessionIDCookie);
 		ac.start();
 	}
@@ -112,7 +106,7 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	}
 	
 	//Constants
-	public static final String aeriesLoginURL="https://mystudent.fjuhsd.net/Parent/LoginParent.aspx";
+	public static final String aeriesLoginURL="https://mystudent.fjuhsd.net/Parent/LoginParent.aspx?page=GradebookSummary.aspx";
 	public static final String aeriesGradesURL="https://mystudent.fjuhsd.net/Parent/GradebookSummary.aspx";
 	
 	//Instance variables
