@@ -6,6 +6,8 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import gui.tools.ImageDisplay;
+
 /**
  * The loading screen that is displayed when the application is first booted up.
  * 

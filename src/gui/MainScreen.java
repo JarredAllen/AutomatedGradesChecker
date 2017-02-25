@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import gui.tools.FixedSizeImageDisplay;
+
 /**
  * The class that handles the main window of the application once it loads.
  * 

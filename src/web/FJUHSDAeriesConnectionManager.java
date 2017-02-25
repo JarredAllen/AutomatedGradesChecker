@@ -1,6 +1,8 @@
 package web;
 
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -45,19 +47,19 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 					}
 				}
 			}
-			HttpsURLConnection httpConnection=(HttpsURLConnection)new URL(aeriesGradesURL).openConnection();
-			httpConnection.setRequestProperty("Cookie", aeriesSessionIDCookie);
-			httpConnection.setRequestMethod("POST");
-			httpConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			String username="justjarred@hotmail.com";
-			String password="ha, losers";
-			String message=String.format("CheckCookiesEnabled=true&CheckMobileDevice=false&CheckStandaloneMode=false&CheckTabletDevice=false&PortalAccountUsername=%s&PortalAccountPassword=%s&PortalAccountUsernameLabel&Submit",
+			HttpsURLConnection httpsConnection=(HttpsURLConnection)new URL(aeriesGradesURL).openConnection();
+			prepareConnection(httpsConnection);
+			String username="justjarred%40hotmail.com";
+			String password="ha";
+			String message=String.format("checkCookiesEnabled=true&checkMobileDevice=false&checkStandaloneMode=false&checkTabletDevice=false&portalAccountUsername=%s&portalAccountPassword=%s&portalAccountUsernameLabel=&submit=",
 											username, password);
-			httpConnection.setRequestProperty("Content-Length", String.valueOf(message.getBytes(StandardCharsets.UTF_8).length));
-			httpConnection.setDoOutput(true);
-			httpConnection.getOutputStream().write(message.getBytes(StandardCharsets.UTF_8));
-			httpConnection.connect();
-			Scanner input=new Scanner(httpConnection.getInputStream());
+			httpsConnection.setRequestProperty("Content-Length", String.valueOf(message.getBytes(StandardCharsets.UTF_8).length));
+			httpsConnection.setDoOutput(true);
+			httpsConnection.getOutputStream().write(message.getBytes(StandardCharsets.UTF_8));
+			httpsConnection.connect();
+			HttpsURLConnection grades=(HttpsURLConnection)new URL(aeriesGradesURL).openConnection();
+			prepareConnection(grades);
+			Scanner input=new Scanner(grades.getInputStream());
 			while(input.hasNextLine()) {
 				System.out.println(input.nextLine());
 			}
@@ -80,6 +82,15 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 		FJUHSDAutoConnector ac=new FJUHSDAutoConnector(aeriesSessionIDCookie);
 		ac.start();
 	}
+	
+	private void prepareConnection(HttpURLConnection con) throws ProtocolException {
+		con.setRequestProperty("Cookie", aeriesSessionIDCookie);
+		con.setUseCaches(false);
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		con.setRequestProperty("User_Agent", userAgent);
+	}
+	
 	
 	@Override
 	/**
@@ -106,8 +117,9 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	}
 	
 	//Constants
-	public static final String aeriesLoginURL="https://mystudent.fjuhsd.net/Parent/LoginParent.aspx?page=GradebookSummary.aspx";
+	public static final String aeriesLoginURL="https://mystudent.fjuhsd.net/Parent/LoginParent.aspx";
 	public static final String aeriesGradesURL="https://mystudent.fjuhsd.net/Parent/GradebookSummary.aspx";
+	public static final String userAgent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
 	
 	//Instance variables
 	private String aeriesSessionIDCookie;
