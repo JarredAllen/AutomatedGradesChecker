@@ -39,7 +39,7 @@ public class NotificationScreen extends JPanel implements ActionListener {
 		setBorder(BorderFactory.createEmptyBorder());
 		JLabel text=new JLabel("Your grades have changed!");
 		text.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-		text.setForeground(Color.lightGray);
+		text.setForeground(Color.green);
 		add(text, BorderLayout.CENTER);
 		
 		TransparentJPanel topPanel=new TransparentJPanel();
@@ -56,7 +56,7 @@ public class NotificationScreen extends JPanel implements ActionListener {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(backgroundImage, 0, 0, null);
+		g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 	}
 	
 	public static void createNewNotificationScreen() {
