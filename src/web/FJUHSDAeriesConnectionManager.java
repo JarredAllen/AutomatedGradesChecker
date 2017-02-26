@@ -4,7 +4,11 @@ import test.DebugLog;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -12,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -61,7 +67,7 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	 * Called to make sure that the application logs in before advancing.
 	 */
 	public void login() {
-		login("justjarred@hotmail.com", "looser");
+		login("justjarred@hotmail.com", "if you are reading this, you should not be trying to get my password.");
 	}
 	
 	/**
@@ -125,7 +131,23 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 				result.append("&"+param);
 			}
 		}
-		System.out.println(result.toString());
+		//System.out.println(result.toString());
+		try {
+			HttpsURLConnection conn=(HttpsURLConnection)new URL(aeriesLoginURL).openConnection();
+			prepareConnection(conn);
+			conn.setDoOutput(true);
+			new PrintWriter(conn.getOutputStream()).println(result.toString());
+			
+			Scanner page=new Scanner(conn.getInputStream());
+			while(page.hasNextLine()) {
+				System.out.println(page.nextLine());
+			}
+			page.close();
+		}
+		catch (IOException e) {
+			// Such problems are likely unrecoverable (see above)
+			System.exit(1);
+		}
 		
 		loggedIn=true;
 	}
@@ -175,6 +197,14 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 		catch(IOException ioe) {
 			DebugLog.logStatement("Failed connecting to Aeries", DebugLog.FAILURE_LOG_CODE);
 		}
+	}
+	
+	private void prepareConnection(HttpURLConnection con) throws ProtocolException {
+		con.setRequestProperty("Cookie", aeriesSessionIDCookie);
+		con.setUseCaches(false);
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		con.setRequestProperty("User-Agent", userAgent);
 	}
 	
 	//Constants
