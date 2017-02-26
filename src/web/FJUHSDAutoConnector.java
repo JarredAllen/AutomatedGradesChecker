@@ -55,6 +55,9 @@ public class FJUHSDAutoConnector implements AutoConnector {
 		reconnect();
 	}
 	
+	/**
+	 * Connects to Aeries again so that the session does not time out while the application is running
+	 */
 	public void reconnect() {
 		try {
 			URLConnection grades=new URL(FJUHSDAeriesConnectionManager.aeriesGradesURL).openConnection();
@@ -70,7 +73,6 @@ public class FJUHSDAutoConnector implements AutoConnector {
 			DebugLog.logStatement("Failed connecting to Aeries", DebugLog.FAILURE_LOG_CODE);
 			System.exit(1);
 		}
-		// TODO Connect to Aeries just to not make it think you idled
 	}
 	
 

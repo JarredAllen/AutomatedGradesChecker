@@ -1,7 +1,5 @@
 package web;
 
-import java.io.InputStream;
-
 /**
  * An interface for connecting to the grades online
  * 
@@ -11,9 +9,9 @@ import java.io.InputStream;
  */
 public interface WebConnectionManager {
 	/**
-	 * @return The <code>InputStream</code> object associated with the connection to the page showing all of the grades.
+	 * @return A <code>String</code> representation of the page showing all of the grades.
 	 */
-	InputStream getMainGradesPage();
+	String getMainGradesPage();
 	
 
 	/**
@@ -52,10 +50,14 @@ public interface WebConnectionManager {
 		 * @return A complete WebConnectionManager
 		 * @throws IllegalStateException if the resource name is incorrect
 		 */
+		@SuppressWarnings("deprecation")
 		public WebConnectionManager build() {
 			switch(webResourceName) {
 			case "FJUHSD_Aeries":
 				return new FJUHSDAeriesConnectionManager();
+			
+			case "Second_FJUHSD_Aeries":
+				return new SecondFJUHSDAeriesConnectionManager();
 			
 			case "Old_FJUHSD_Aeries":
 				return new OldFJUHSDAeriesConnectionManager();

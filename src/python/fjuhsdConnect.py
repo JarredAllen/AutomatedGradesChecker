@@ -1,28 +1,29 @@
 '''
-Created on Feb 23, 2017
-Last updates on Feb 23, 2017
+Created on Feb 26, 2017
 
+It logs on to Aeries and stores its cookies from Aeries in the output stream
+Syntax is python %0 <username> <password>
 @author: Jarred
 '''
 
-from urllib.request import urlopen, Request
-from sys import stdout
+import requests
+from requests.utils import dict_from_cookiejar
 
-def main():
-    r=Request("https://mystudent.fjuhsd.net/Parent/LoginParent.aspx?page=GradebookSummary.aspx")
-    conn=urlopen(r)
-    conn.add_header("Cookie", "ASP.NET_SessionId=pufk4nl3w5pjs4mcxpah2vhx")
-    bytes=conn.read()
-    for c in bytes:
-        try:
-            stdout.write(chr(c))
-        except:
-            pass
+from sys import argv, stdout as cout
 
-if __name__ == '__main__':
-    main()
-
-headers={'Host':'mystudent.fjuhsd.org', 'Connection':'keep-alive', 'Origin':'example.com', 'Cache-Control':'max-age=0',
-             'Upgrade-Insecure-Requests':'1', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-             'Accept-Encoding':'gzip, deflate, br', 'Accept-Language':'en-US,en;q=0.8', 'Content-Type':'keep-alive',
-             'Cookie':'ASP.NET_SessionId=bjg0f0etkzf4ponexzpt0lh4'}
+with requests.Session() as c:
+    login = "https://mystudent.fjuhsd.net/Parent/LoginParent.aspx?page=GradebookSummary.aspx"
+    grades = "https://mystudent.fjuhsd.net/Parent/GradebookSummary.aspx"
+    
+    username=argv[1]
+    password=argv[2]
+    
+    data={'checkCookiesEnabled':'true', 'checkMobileDevice':'false', 'checkStandaloneMode':'false', 'checkTabletDevice':'false',
+          'portalAccountUsername':username, 'portalAccountPassword':password, 'portalAccountUsernameLabel':'', 'submit':''}
+    
+    
+    c.get(login)
+    c.post(login, data=data)
+    cookies=dict_from_cookiejar(c.cookies)
+    for cookie in cookies:
+        cout.write(cookie+'='+cookies[cookie]+' ')

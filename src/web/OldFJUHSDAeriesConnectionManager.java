@@ -1,7 +1,6 @@
 package web;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -23,6 +22,7 @@ import test.DebugLog;
  * @version 2/25/2017
  * @since 2/6/2017
  * @see FJUHSDAeriesConnectionManager
+ * @deprecated
  */
 public class OldFJUHSDAeriesConnectionManager implements WebConnectionManager {
 	
@@ -94,24 +94,18 @@ public class OldFJUHSDAeriesConnectionManager implements WebConnectionManager {
 	/**
 	 * @inheritDoc
 	 */
-	public InputStream getMainGradesPage() {
+	public String getMainGradesPage() {
 		//TOqDO Implement getMainGradesPage() (todo statement interrupted because this is not being worked on)
-		return (InputStream)null;
+		return null;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	/**
 	 * @inheritDoc
 	 */
 	public void fillInGrades() {
-		try {
-			InputStream data=getMainGradesPage();
-			//TODO Implement fillInGrades()
-			data.close();
-		}
-		catch(IOException ioe) {
-			DebugLog.logStatement("Failed connecting to Aeries", DebugLog.FAILURE_LOG_CODE);
-		}
+		String data=getMainGradesPage();
 	}
 	
 	//Constants
@@ -131,6 +125,6 @@ public class OldFJUHSDAeriesConnectionManager implements WebConnectionManager {
 	 * @param args An ignored parameter
 	 */
 	public static void main(String[] args) {
-		new FJUHSDAeriesConnectionManager();
+		new OldFJUHSDAeriesConnectionManager();
 	}
 }
