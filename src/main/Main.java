@@ -11,6 +11,8 @@ import gui.LoadingScreen;
 import gui.MainScreen;
 
 import test.DebugLog;
+import web.LoadCredentialsFromFile;
+import web.WebConnectionManager;
 
 /**
  * The class that the application runs immediately upon startup.
@@ -44,7 +46,10 @@ public final class Main {
 	public static void main(String[] args) {
 		ah=new ArgumentHolder(args);
 		if(ah.containsOption("-c")||ah.containsOption("--justcheck")) {
-			//TODO Use checking functionality here once it gets implemented
+			if(LoadCredentialsFromFile.hasLoginCredentials()) {
+				WebConnectionManager conn=new WebConnectionManager.Builder(LoadCredentialsFromFile.getGradesInfoSource()).build();
+			}
+			//if it does not, we are done here
 			return;
 		}
 		JFrame loadingScreen=new JFrame();

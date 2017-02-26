@@ -8,6 +8,8 @@ package web;
  * @since 2/6/2017
  */
 public interface WebConnectionManager {
+	
+	public static final String[] validNotDeprecatedServers={"FJUHSD_Aeries"};
 	/**
 	 * @return A <code>String</code> representation of the page showing all of the grades.
 	 */

@@ -37,6 +37,23 @@ public class LoadCredentialsFromFile {
 		return false;
 	}
 	
+	public static String getGradesInfoSource() {
+		String source= null;
+		if(hasLoginCredentials()) {
+			try {
+				Scanner fileIn=new Scanner(new File(credentialsFileLocation));
+				fileIn.nextLine();
+				source=fileIn.nextLine();
+				fileIn.close();
+			}
+			catch (IOException ioe) {
+				ioe.printStackTrace();
+				System.exit(2);
+			}
+		}
+		return source;
+	}
+	
 	/**
 	 * Check the file of login credentials and return the username, if it is stored
 	 * 
@@ -47,7 +64,7 @@ public class LoadCredentialsFromFile {
 		if(hasLoginCredentials()) {
 			try {
 				Scanner fileIn=new Scanner(new File(credentialsFileLocation));
-				fileIn.nextLine();
+				fileIn.nextLine();fileIn.nextLine();
 				uname=fileIn.nextLine();
 				fileIn.close();
 			}
@@ -69,7 +86,7 @@ public class LoadCredentialsFromFile {
 		if(hasLoginCredentials()) {
 			try {
 				Scanner fileIn=new Scanner(new File(credentialsFileLocation));
-				fileIn.nextLine();fileIn.nextLine();
+				fileIn.nextLine();fileIn.nextLine();fileIn.nextLine();
 				password=fileIn.nextLine();
 				fileIn.close();
 			}
@@ -99,7 +116,7 @@ public class LoadCredentialsFromFile {
 		}
 	}
 	
-	public static void setCredentials(String username, String password) {
+	public static void setCredentials(String source, String username, String password) {
 		try {
 			File f=new File(credentialsFileLocation);
 			if(!f.exists()) {
@@ -107,6 +124,8 @@ public class LoadCredentialsFromFile {
 			}
 			PrintWriter fileOut=new PrintWriter(f);
 			fileOut.write("REMEMBERED CREDENTIALS\n");
+			fileOut.write(source);
+			fileOut.write("\n");
 			fileOut.write(username);
 			fileOut.write("\n");
 			fileOut.write(password);
@@ -127,6 +146,7 @@ public class LoadCredentialsFromFile {
 	 */
 	public static void main(String[] args) {
 		System.out.println(hasLoginCredentials());
+		System.out.println(getGradesInfoSource());
 		System.out.println(getRememberedUsername());
 		System.out.println(getRememberedPassword());
 	}

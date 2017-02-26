@@ -33,16 +33,10 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 	}
 	
 	private void logIn(boolean tryAgain) {
-		JTextField username = new JTextField();
-		JTextField password = new JPasswordField();
-		Object[] message = {"Username:", username, "Password:", password};
-		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
-		while (option != JOptionPane.OK_OPTION) {
-			option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
-		}
 		try {
+			String[] credentials=getCredentials();
 			Process p=Runtime.getRuntime().exec(String.format("python src/python/fjuhsdConnect.py %s %s", 
-													username.getText(), password.getText()));
+													credentials[0], credentials[1]));
 			Scanner input=new Scanner(p.getInputStream());
 			try {
 				p.waitFor();
@@ -70,6 +64,20 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 			}
 		}
 		System.out.println(Arrays.asList(cookies));
+	}
+	
+	public String[] getCredentials() {
+		if(LoadCredentialsFromFile.hasLoginCredentials()) {
+			return new String[0];
+		}
+		JTextField username = new JTextField();
+		JTextField password = new JPasswordField();
+		Object[] message = {"Username:", username, "Password:", password};
+		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+		while (option != JOptionPane.OK_OPTION) {
+			option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+		}
+		return new String[0];
 	}
 	
 	public String getLoginPage() {

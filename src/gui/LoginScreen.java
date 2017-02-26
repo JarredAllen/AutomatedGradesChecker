@@ -9,11 +9,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import web.LoadCredentialsFromFile;
 
@@ -32,6 +35,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 	private JTextField username;
 	private JPasswordField password;
 	private JCheckBox rememberLogin;
+	private JComboBox<String> serverField;
 	
 	/**
 	 * Completely and properly instantiates a LoginScreen object
@@ -46,12 +50,15 @@ public class LoginScreen extends JPanel implements ActionListener {
 		centerPanel.setLayout(new FlowLayout());
 		username=new JTextField(35);
 		password=new JPasswordField(35);
+		serverField=new JComboBox<String>(web.WebConnectionManager.validNotDeprecatedServers);
 		rememberLogin=new JCheckBox("Remember login (necessary for notifications to work)");
 		rememberLogin.setSelected(true);
 		centerPanel.add(new JLabel("Username: "));
 		centerPanel.add(username);
 		centerPanel.add(new JLabel("Password: "));
 		centerPanel.add(password);
+		centerPanel.add(new JLabel("Login Server: "));
+		centerPanel.add(serverField);
 		centerPanel.add(rememberLogin);
 		add(centerPanel, BorderLayout.CENTER);
 		JButton submitButton=new JButton("Submit");
@@ -85,6 +92,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String uname=username.getText();
 		String pass=new String(password.getPassword());
+		String serv=serverField.getSelectedItem().toString();
 		if(uname.equals("")) {
 			JOptionPane.showMessageDialog(null, "Please input a username");
 			return;
@@ -94,7 +102,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 			return;
 		}
 		if(rememberLogin.isSelected()) {
-			LoadCredentialsFromFile.setCredentials(uname, pass);
+			LoadCredentialsFromFile.setCredentials(serv, uname, pass);
 		}
 		else {
 			LoadCredentialsFromFile.removeCredentials();
@@ -114,5 +122,21 @@ public class LoginScreen extends JPanel implements ActionListener {
 	 */
 	public interface LoginResponder {
 		void respondToLogin(String username, String password);
+	}
+	
+	/**
+	 * Only here for testing purposes
+	 * 
+	 * @param args Ignored command line parameter
+	 */
+	public static void main(String[] args) {
+		JFrame frame=new JFrame("Automated Grades Checker");
+		LoginScreen scr=new LoginScreen();
+		frame.setContentPane(scr);
+		frame.setLocation(500, 500);
+		frame.setSize(500, 500);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setUndecorated(false);
+		frame.setVisible(true);
 	}
 }
