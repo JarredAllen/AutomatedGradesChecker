@@ -18,6 +18,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,7 +31,7 @@ import org.jsoup.select.Elements;
  * Retrieves grades from the Aeries site maintained by FJUHSD.
  * 
  * @author Jarred
- * @version 2/25/2017
+ * @version 2/26/2017
  * @since 2/25/2017
  * @see OldFJUHSDAeriesConnectionManager
  */
@@ -37,8 +40,14 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	private boolean loggedIn;
 	
 	public FJUHSDAeriesConnectionManager() {
+		cookies=new String[2];
 		loggedIn=false;
-		
+		try {
+			cookies[0]="AeriesNet="+URLEncoder.encode("LastSC_0=808&LastSN_0=5713&LastID_0=800002942", "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			// This should never be thrown
+			System.exit(1);
+		}
 		URL login;
 		try {
 			login = new URL(aeriesLoginURL);
@@ -49,8 +58,9 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 					for(String value:responses.get(header)) {
 						String cookie=value.split(";\\s*")[0];//splits it by semicolon followed by any whitespace
 						if(cookie.split("=")[0].equalsIgnoreCase("ASP.NET_SessionId")) {
-							aeriesSessionIDCookie=cookie;
+							cookies[1]=cookie;
 						}
+						System.out.println(cookie);
 					}
 				}
 			}
@@ -61,13 +71,22 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 			System.exit(1);
 		}
 		login();
+		//System.out.println(aeriesSessionIDCookie);
 	}
 	
 	/**
-	 * Called to make sure that the application logs in before advancing.
+	 * Called to make sure that the application logs in before advancing.</p>
+	 * <p>When fully implemented, it will request the password of the user before advancing
 	 */
 	public void login() {
-		login("justjarred@hotmail.com", "if you are reading this, you should not be trying to get my password.");
+		JTextField username = new JTextField();
+		JTextField password = new JPasswordField();
+		Object[] message = {"Username:", username, "Password:", password};
+		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+		while (option != JOptionPane.OK_OPTION) {
+			option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+		}
+		login(username.getText(), password.getText());
 	}
 	
 	/**
@@ -77,10 +96,24 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	 * @param password The password to use for logging in
 	 */
 	public void login(String username, String password) {
+		try {
+			HttpsURLConnection others=(HttpsURLConnection)new URL("https://mystudent.fjuhsd.net/Parent/GeneralFunctions.asmx/GetIDPFromDomain").openConnection();
+			others.setRequestProperty("Cookie", getAllCookies());
+			others.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+			others.setDoOutput(true);
+			PrintWriter pw=new PrintWriter(others.getOutputStream());
+			pw.write("{\"EM\":\"justjarred@hotmail.com\"}");
+			pw.close();
+		}
+		catch (IOException e1) {
+			// See above
+			System.exit(1);
+		}
+		
 		String html=getLoginPage();
 		Document d=Jsoup.parse(html);
 		
-		//parse the html document and 
+		//parse the html document and find all appropriate forms
 		Element loginForm=d.getElementsByTag("form").first();
 		Elements fields=loginForm.getElementsByTag("input");
 		ArrayList<String>forms=new ArrayList<>();
@@ -136,19 +169,56 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 			HttpsURLConnection conn=(HttpsURLConnection)new URL(aeriesLoginURL).openConnection();
 			prepareConnection(conn);
 			conn.setDoOutput(true);
-			new PrintWriter(conn.getOutputStream()).println(result.toString());
-			
-			Scanner page=new Scanner(conn.getInputStream());
-			while(page.hasNextLine()) {
-				System.out.println(page.nextLine());
-			}
-			page.close();
+			new PrintWriter(conn.getOutputStream()).println(String.format("checkCookiesEnabled=true&checkMobileDevice=false&checkStandaloneMode=false&checkTabletDevice=false&portalAccountUsername=%s&portalAccountPassword=%s&portalAccountUsernameLabel=&submit=",
+					username, password));
+			conn.getOutputStream().close();
 		}
 		catch (IOException e) {
 			// Such problems are likely unrecoverable (see above)
+			e.printStackTrace();
 			System.exit(1);
 		}
-		
+		try {
+			HttpURLConnection others=(HttpURLConnection)new URL("http://mystudent.fjuhsd.net/Parent/Widgets/ClassSummary/home").openConnection();
+			others.setRequestProperty("Cookie", getAllCookies());
+			others.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+			others.setDoOutput(true);
+			PrintWriter pw=new PrintWriter(others.getOutputStream());
+			pw.write("{\"IsProfile\":\"True\",\"ShowPrintButton\":\"False\",\"ShowBackground\":\"True\"}");
+			pw.close();
+			//one last connection
+			others=(HttpsURLConnection)new URL("https://mystudent.fjuhsd.net/Parent/studentdata/reportcardhistory/true/?_=1488127731489").openConnection();
+			others.setRequestProperty("Cookie", getAllCookies());
+			others.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+			others.setRequestMethod("GET");
+			others.connect();
+			
+		}
+		catch (IOException e1) {
+			// See above
+			System.exit(1);
+		}
+		try {
+			HttpsURLConnection grades=(HttpsURLConnection)new URL(aeriesGradesURL).openConnection();
+			prepareConnection(grades);
+			grades.setRequestMethod("GET");
+			Scanner input=new Scanner(grades.getInputStream());
+			while(input.hasNext()) {
+				System.out.println(input.nextLine());
+			}
+			if(grades.getURL().toString().equals(aeriesGradesURL)) {
+				loggedIn=true;
+			}
+			else {
+				System.out.println(grades.getURL().toString());
+			}
+			input.close();
+		}
+		catch (IOException e1) {
+			//should never be thrown
+			e1.printStackTrace();
+			System.exit(1);
+		}
 		loggedIn=true;
 	}
 	
@@ -200,11 +270,22 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	}
 	
 	private void prepareConnection(HttpURLConnection con) throws ProtocolException {
-		con.setRequestProperty("Cookie", aeriesSessionIDCookie);
+		con.setRequestProperty("Cookie", getAllCookies());
 		con.setUseCaches(false);
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		con.setRequestProperty("User-Agent", userAgent);
+	}
+	
+	private String getAllCookies() {
+		StringBuilder value=new StringBuilder();
+		for (String cookie:cookies) {
+			if(value.length()!=0) {
+				value.append(";");
+			}
+			value.append(cookie);
+		}
+		return value.toString();
 	}
 	
 	//Constants
@@ -213,7 +294,7 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 	public static final String userAgent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
 	
 	//Instance variables
-	private String aeriesSessionIDCookie;
+	private String[]cookies;
 	
 	
 	//Everything after here is for testing purposes
