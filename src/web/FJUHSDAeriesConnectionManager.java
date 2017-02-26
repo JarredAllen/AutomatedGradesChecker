@@ -1,41 +1,42 @@
 package web;
 
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import java.nio.charset.StandardCharsets;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-
-import javax.net.ssl.HttpsURLConnection;
-
 import test.DebugLog;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
- * Retrieves grades from the Aeries site maintained by FJUHSD
+ * Retrieves grades from the Aeries site maintained by FJUHSD.
  * 
  * @author Jarred
- * @version 2/13/2017
- * @since 2/6/2017
+ * @version 2/25/2017
+ * @since 2/25/2017
+ * @see OldFJUHSDAeriesConnectionManager
  */
-public final class FJUHSDAeriesConnectionManager implements WebConnectionManager{
+public final class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 	
-	/**
-	 * Completely and properly instantiates a FJUHSDAeriesConnectionManager
-	 */
+	private boolean loggedIn;
+	
 	public FJUHSDAeriesConnectionManager() {
+		loggedIn=false;
+		
+		URL login;
 		try {
-			URL login=new URL(aeriesGradesURL);
+			login = new URL(aeriesLoginURL);
 			URLConnection connection=login.openConnection();
-			connection.setDoOutput(true);
 			Map<String, List<String>> responses=connection.getHeaderFields();
 			for(String header:responses.keySet()) {
 				if("set-cookie".equalsIgnoreCase(header)) {
@@ -47,56 +48,116 @@ public final class FJUHSDAeriesConnectionManager implements WebConnectionManager
 					}
 				}
 			}
-			HttpsURLConnection httpsConnection=(HttpsURLConnection)new URL(aeriesGradesURL).openConnection();
-			prepareConnection(httpsConnection);
-			String username="justjarred%40hotmail.com";
-			String password="ha";
-			String message=String.format("checkCookiesEnabled=true&checkMobileDevice=false&checkStandaloneMode=false&checkTabletDevice=false&portalAccountUsername=%s&portalAccountPassword=%s&portalAccountUsernameLabel=&submit=",
-											username, password);
-			httpsConnection.setRequestProperty("Content-Length", String.valueOf(message.getBytes(StandardCharsets.UTF_8).length));
-			httpsConnection.setDoOutput(true);
-			httpsConnection.getOutputStream().write(message.getBytes(StandardCharsets.UTF_8));
-			httpsConnection.connect();
-			HttpsURLConnection grades=(HttpsURLConnection)new URL(aeriesGradesURL).openConnection();
-			prepareConnection(grades);
-			Scanner input=new Scanner(grades.getInputStream());
-			while(input.hasNextLine()) {
-				System.out.println(input.nextLine());
-			}
-			//close resources after this is done
-			input.close();
-		}
-		catch(MalformedURLException e) {
-			e.printStackTrace();
-			
-			DebugLog.logStatement("Failed connecting to Aeries", DebugLog.FAILURE_LOG_CODE);
-			System.exit(1);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
-			
-			DebugLog.logStatement("Failed connecting to Aeries", DebugLog.FAILURE_LOG_CODE);
+			//I do not believe that the application can recover from this, so I am simplifying the recovery process
+			//Maybe make this start the application over, if you have time later
 			System.exit(1);
 		}
-		System.out.println(aeriesSessionIDCookie);
-		FJUHSDAutoConnector ac=new FJUHSDAutoConnector(aeriesSessionIDCookie);
-		ac.start();
+		login();
 	}
 	
-	private void prepareConnection(HttpURLConnection con) throws ProtocolException {
-		con.setRequestProperty("Cookie", aeriesSessionIDCookie);
-		con.setUseCaches(false);
-		con.setRequestMethod("POST");
-		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		con.setRequestProperty("User_Agent", userAgent);
+	/**
+	 * Called to make sure that the application logs in before advancing.
+	 */
+	public void login() {
+		login("justjarred@hotmail.com", "looser");
 	}
 	
+	/**
+	 * Login on the web connection
+	 * 
+	 * @param username The username to use for logging in
+	 * @param password The password to use for logging in
+	 */
+	public void login(String username, String password) {
+		String html=getLoginPage();
+		Document d=Jsoup.parse(html);
+		
+		//parse the html document and 
+		Element loginForm=d.getElementsByTag("form").first();
+		Elements fields=loginForm.getElementsByTag("input");
+		ArrayList<String>forms=new ArrayList<>();
+		for(Element field:fields) {
+			String name=field.attr("name");
+			String body="";
+			switch(name) {
+			case "portalAccountUsername":
+				body=username;
+				break;
+				
+			case "portalAccountPassword":
+				body=password;
+				break;
+				
+			case "checkCookiesEnabled":
+				body="true";
+				break;
+
+			case "checkMobileDevice":
+			case "checkStandaloneMode":
+			case "checkTabletDevice":
+				body="false";
+				break;
+			
+			case "portalAccountUsernameLabel":
+			case "submit":
+				break;
+				
+			default:
+				DebugLog.logStatement("Unrecognized form on Aeries: "+name, DebugLog.INTERNET_LOG_CODE);
+			}
+			try {
+				forms.add(name+"="+URLEncoder.encode(body, "UTF-8"));
+			}
+			catch (UnsupportedEncodingException e) {
+				//I do not see how this exception may ever be thrown, but it must be caught anyways
+				//If it happens, it might be recoverable or it might break later on in the code
+				DebugLog.logStatement("Format error for encoding "+body+"in UTF-8.", DebugLog.CONCURRENCY_LOG_CODE);
+			}
+		}
+		StringBuilder result=new StringBuilder();
+		for(String param:forms) {
+			if(result.length()==0) {
+				result.append(param);
+			}
+			else {
+				result.append("&"+param);
+			}
+		}
+		System.out.println(result.toString());
+		
+		loggedIn=true;
+	}
+	
+	public String getLoginPage() {
+		try {
+			URL login = new URL(aeriesLoginURL);
+			URLConnection connection=login.openConnection();
+			connection.connect();
+			Scanner page=new Scanner(connection.getInputStream());
+			String buffer="";
+			while(page.hasNext()) {
+				buffer+=page.nextLine()+"\n";
+			}
+			page.close();
+			return buffer;
+		}
+		catch (IOException ioe) {
+			//see note on catch in constructor
+			System.exit(1);
+		}
+		return "error";
+	}
 	
 	@Override
 	/**
 	 * @inheritDoc
 	 */
 	public InputStream getMainGradesPage() {
+		if(!loggedIn) {
+			login();
+		}
 		//TODO Implement getMainGradesPage()
 		return (InputStream)null;
 	}

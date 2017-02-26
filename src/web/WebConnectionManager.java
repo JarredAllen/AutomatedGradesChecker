@@ -56,7 +56,10 @@ public interface WebConnectionManager {
 			switch(webResourceName) {
 			case "FJUHSD_Aeries":
 				return new FJUHSDAeriesConnectionManager();
-				
+			
+			case "Old_FJUHSD_Aeries":
+				return new OldFJUHSDAeriesConnectionManager();
+			
 			default:
 				throw new IllegalStateException(); //this is only run if it is given an invalid webResourceName
 			}

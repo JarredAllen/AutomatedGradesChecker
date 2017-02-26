@@ -65,6 +65,8 @@ public final class DebugLog {
 		}
 		catch(NullPointerException npe) {
 			System.out.println("NPE in DebugLog. This should not happen if run from Main, but will otherwise happen.");
+			System.out.printf("The logged message was this:\n %s", line);
+			System.out.println();
 		}
 	}
 	
