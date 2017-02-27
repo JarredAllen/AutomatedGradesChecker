@@ -25,11 +25,8 @@ public class Loader implements Runnable{
 	public void run() {
 		if(LoadCredentialsFromFile.hasLoginCredentials()) {
 			hasCredentials=true;
+			ClassManager.getCurrentClasses();
 		}
-		try {
-			Thread.sleep(500);
-		}
-		catch(InterruptedException ie) {}
 		DebugLog.logStatement("About to wake up Main. (concurrency)", DebugLog.CONCURRENCY_LOG_CODE);
 		isLoaded=true;
 		synchronized(Main.lock) {

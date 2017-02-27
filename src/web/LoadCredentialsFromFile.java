@@ -24,7 +24,14 @@ public class LoadCredentialsFromFile {
 	 */
 	public static boolean hasLoginCredentials() {
 		try {
-			Scanner fileIn=new Scanner(new File(credentialsFileLocation));
+			File f=new File(credentialsFileLocation);
+			if(!f.exists()) {
+				f.createNewFile();
+				PrintWriter pw=new PrintWriter(f);
+				pw.println("NO REMEMBERED CREDENTIALS");
+				pw.close();
+			}
+			Scanner fileIn=new Scanner(f);
 			String line=fileIn.nextLine();
 			boolean returnValue = line.equalsIgnoreCase("REMEMBERED CREDENTIALS");
 			fileIn.close();

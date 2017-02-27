@@ -90,6 +90,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 	 * Should only be called when the user submits
 	 */
 	public void actionPerformed(ActionEvent e) {
+		//System.out.println(responders);
 		String uname=username.getText();
 		String pass=new String(password.getPassword());
 		String serv=serverField.getSelectedItem().toString();
@@ -105,10 +106,18 @@ public class LoginScreen extends JPanel implements ActionListener {
 			LoadCredentialsFromFile.setCredentials(serv, uname, pass);
 		}
 		else {
-			LoadCredentialsFromFile.removeCredentials();
+			int option=JOptionPane.showConfirmDialog(null, "Are you sure you don't want to remember your login credentials?\n" +
+							"This portion of the app is still in beta test and may not work.", "Confirm", JOptionPane.OK_CANCEL_OPTION);
+			if(option==JOptionPane.OK_OPTION) {
+				LoadCredentialsFromFile.removeCredentials();
+			}
+			else {
+				LoadCredentialsFromFile.setCredentials(serv, uname, pass);
+			}
 		}
 		for(LoginResponder lr:responders) {
-			lr.respondToLogin(uname, pass);
+			//System.out.println("Alerting responder "+lr.getClass().toString());
+			lr.respondToLogin(serv, uname, pass);
 		}
 	}
 	
@@ -121,7 +130,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 	 * @since 2/9/2017
 	 */
 	public interface LoginResponder {
-		void respondToLogin(String username, String password);
+		void respondToLogin(String source, String username, String password);
 	}
 	
 	/**

@@ -25,7 +25,7 @@ public final class Main {
 
 	public static ArgumentHolder ah;
 
-	public static final String[] parameterlessOtions={"-c", "-justcheck", "-d", "--debug"};
+	public static final String[] parameterlessOtions={"-c", "--just-check", "-d", "--debug"};
 	public static final String[] parameterOptions={};
 	
 	public static final Object lock=new Object();
@@ -37,7 +37,7 @@ public final class Main {
 	 * <p>Command line arguments that can be passed:
 	 * <table border="1">
 	 * <tr> <td><strong>Argument</strong></td>		<td><strong>Meaning</strong></td> </tr>
-	 * <tr> <td> -c</br> --justcheck</td>			<td>Only check for updates and not activate the GUI for anything.</td></tr> 
+	 * <tr> <td> -c</br> --just-check</td>			<td>Only check for updates and not activate the GUI for anything.</td></tr> 
 	 * <tr> <td> -d</br> --debug</td>				<td>Have extra debugging information printed out.</td>
 	 * </table>
 	 * 
@@ -45,13 +45,13 @@ public final class Main {
 	 */
 	public static void main(String[] args) {
 		ah=new ArgumentHolder(args);
-		if(ah.containsOption("-c")||ah.containsOption("--justcheck")) {
+		if(ah.containsOption("-c")||ah.containsOption("--just-check")) {
 			//System.out.println("Only checking");
 			if(LoadCredentialsFromFile.hasLoginCredentials()) {
 				WebConnectionManager conn=new WebConnectionManager.Builder(LoadCredentialsFromFile.getGradesInfoSource()).build();
 				ClassManager current=conn.fillInGrades();
 				if(!current.equals(ClassManager.getSavedClasses())) {
-					NotificationScreen.createNewNotificationScreen();
+					NotificationScreen.createNewNotificationScreen(true);
 				}
 			}
 			//if it does not, we are done here
@@ -77,8 +77,22 @@ public final class Main {
 			} catch (InterruptedException e) {}
 		}
 		DebugLog.logStatement("Main has resumed. (concurrency)", DebugLog.CONCURRENCY_LOG_CODE);
+		if(LoadCredentialsFromFile.hasLoginCredentials()) {
+			ClassManager current=ClassManager.getCurrentClasses();
+			if(!current.equals(ClassManager.getSavedClasses())) {
+				NotificationScreen.createNewNotificationScreen(false);
+			}
+			current.writeClassesToFile();
+		}
 		JFrame frame=new JFrame();
-		frame.setContentPane(new MainScreen());
+		MainScreen screen=null;
+		if(LoadCredentialsFromFile.hasLoginCredentials()) {
+			screen=new MainScreen(MainScreen.MENU_SCREEN);
+		}
+		else {
+			screen=new MainScreen(MainScreen.LOGIN_SCREEN);
+		}
+		frame.setContentPane(screen);
 		frame.setSize(frameSize, frameSize);
 		frame.setLocation(200,200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

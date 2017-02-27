@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+
+import web.LoadCredentialsFromFile;
+import web.WebConnectionManager;
 
 /**
  * A class used to keep track of sets of classes
@@ -23,7 +27,7 @@ public class ClassManager {
 	private ArrayList<Class> classes;
 	
 	public ClassManager(Class[] classes) {
-		this.classes=new ArrayList<>(Arrays.asList(classes));
+		this(Arrays.asList(classes));
 	}
 	
 	public ClassManager(Collection<Class> classes) {
@@ -65,6 +69,7 @@ public class ClassManager {
 	/**
 	 * @inheritDoc
 	 */
+	@Override
 	public int hashCode() {
 		return classes.hashCode();
 	}
@@ -78,7 +83,34 @@ public class ClassManager {
 	 */
 	@Override
 	public String toString() {
-		return classes.toString();
+		StringBuilder builder=new StringBuilder();
+		for(Class c:classes) {
+			builder.append(c.toString()+"\n");
+		}
+		return builder.toString();
+	}
+	
+	/**
+	 * Writes all of this ClassManager's classes to the file storing the last data
+	 */
+	public void writeClassesToFile() {
+		try {
+			File f=new File(lastDataFile);
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			PrintWriter writer=new PrintWriter(f);
+			writer.print(toString());
+			writer.close();
+		}
+		catch(FileNotFoundException fnfe) {
+			//I literally just created the file
+			//I feel surrounded by insufferable cretins
+		} catch (IOException e) {
+			//I don't even know how this happened
+			//The file did not exist, and the program could not create it.
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -93,8 +125,10 @@ public class ClassManager {
 	 * @return A ClassManager representing all of the current classes or null, if the user is not logged in
 	 */
 	public static ClassManager getCurrentClasses() {
-		if(currentClasses==null) {
-			//TODO Initialize this
+		if(currentClasses==null && LoadCredentialsFromFile.hasLoginCredentials()) {
+			//If there are no login credentials, then it can not return anything, so it returns null
+			WebConnectionManager.Builder builder=new WebConnectionManager.Builder(LoadCredentialsFromFile.getGradesInfoSource());
+			currentClasses=builder.build().fillInGrades();
 		}
 		return currentClasses;
 	}
@@ -106,7 +140,11 @@ public class ClassManager {
 	 */
 	public static ClassManager getSavedClasses() {
 		try {
-			Scanner input=new Scanner(new File(lastDataFile));
+			File f=new File(lastDataFile);
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			Scanner input=new Scanner(f);
 			StringBuilder buffer=new StringBuilder();
 			while(input.hasNextLine()) {
 				buffer.append(input.nextLine()+"\n");
@@ -115,8 +153,11 @@ public class ClassManager {
 			return getClassManagerFromString(buffer.toString());
 		}
 		catch (FileNotFoundException e) {
-			//The file does not exist, so I return null due to no such classes existing
-			//Please do not dereference this 
+			//I literally just created that file
+			//I feel like I'm surrounded by insufferable cretins
+			return null;
+		} catch (IOException e) {
+			//The file did not exist, and I could not create the file
 			return null;
 		}
 	}
@@ -143,14 +184,15 @@ public class ClassManager {
 	 * Method for testing this class
 	 *  
 	 * @param args Ignored command-line arguments
+	 * @throws FileNotFoundException If the tester breaks
 	 */
-	public static void main(String[] args) {
-		/*ArrayList<Class> classes=new ArrayList<>();
-		classes.add(new Class(1, "AP-US History", .875, "Feb 9"));
-		classes.add(new Class(1, "French", .998, "Jan 8"));
-		classes.add(new Class(2, "Band", 1, "May 4"));
-		classes.add(new Class(3, "Physics", .6108, "Feb 26"));
-		classes.add(new Class(4, "Calculus", .918, "Jan 8"));
-		System.out.println(getSavedClasses().equals(new ClassManager(classes)));*/
+	public static void main(String[] args) throws FileNotFoundException {
+		ArrayList<Class> classes=new ArrayList<>();
+		classes.add(new Class(0, "AP-US History", ".875", "Feb 9"));
+		classes.add(new Class(1, "French", ".975", "Jan 8"));
+		classes.add(new Class(2, "Band", "1", "May 4"));
+		classes.add(new Class(3, "Physics", ".6108", "Feb 26"));
+		classes.add(new Class(4, "Calculus", ".918", "Jan 8"));
+		System.out.println(getSavedClasses().equals(new ClassManager(classes)));
 	}
 }

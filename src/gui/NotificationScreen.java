@@ -12,12 +12,14 @@ import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import gui.tools.TransparentJPanel;
+import main.ClassManager;
 import main.Main;
 
 /**
@@ -32,19 +34,33 @@ public class NotificationScreen extends JPanel implements ActionListener {
 	
 	private JFrame parent;
 	
-	public NotificationScreen(JFrame parent) {
+	//NOTE to future self:
+	//If you need the advanceToMenuScreen parameter again, just use the following code snippet:
+	//text instanceof JButton
+	//and increase the scope of text so that it can be used as an instance variable
+	
+	public NotificationScreen(JFrame parent, boolean advanceToMenuScreen) {
 		//set up variables
 		backgroundImage=new ImageIcon("res/img/background.png").getImage();
 		this.parent=parent;
 		//set up the frame
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder());
-		JButton text=new JButton("Your grades have changed!");
-		text.setActionCommand("Check");
-		text.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-		text.setForeground(Color.green);
-		text.addActionListener(this);
-		text.setContentAreaFilled(false);
+		JComponent text=null;
+		if(advanceToMenuScreen) {
+			text=new JButton("Your grades have changed!");
+			JButton button=(JButton)text;
+			button.setActionCommand("Check");
+			button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+			button.setForeground(Color.green);
+			button.addActionListener(this);
+			button.setContentAreaFilled(false);
+		}
+		else {
+			text=new JLabel("Your grades have changed!");
+			text.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+			text.setForeground(Color.green);
+		}
 		add(text, BorderLayout.CENTER);
 		
 		TransparentJPanel topPanel=new TransparentJPanel();
@@ -65,13 +81,13 @@ public class NotificationScreen extends JPanel implements ActionListener {
 		g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 	}
 	
-	public static void createNewNotificationScreen() {
+	public static void createNewNotificationScreen(boolean advanceToMenuScreen) {
 		JFrame frame=new JFrame("Automated Grades Checker");
-		NotificationScreen scr=new NotificationScreen(frame);
+		NotificationScreen scr=new NotificationScreen(frame, advanceToMenuScreen);
 		frame.setContentPane(scr);
 		frame.setLocation(500, 500);
 		frame.setSize(300, 175);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(advanceToMenuScreen ? WindowConstants.EXIT_ON_CLOSE : WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setUndecorated(true);
 		frame.setVisible(true);
 	}
@@ -82,15 +98,17 @@ public class NotificationScreen extends JPanel implements ActionListener {
 	 * @param args Ignored command-line parameter
 	 */
 	public static void main(String[] args) {
-		createNewNotificationScreen();
+		createNewNotificationScreen(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		parent.dispose();
 		if(arg0.getActionCommand().equals("Check")) {
+			ClassManager.getCurrentClasses().writeClassesToFile();
 			Main.main(new String[0]);
+			parent.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		}
+		parent.dispose();
 	}
 
 }

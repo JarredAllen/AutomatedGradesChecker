@@ -14,7 +14,7 @@ import gui.tools.FixedSizeImageDisplay;
  * @version 2/26/2017
  * @since 1/14/2017
  */
-public class MainScreen extends JPanel{
+public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
 	private static final long serialVersionUID = 1L;
 	
 	private NorthSubPanel northPanel;
@@ -44,6 +44,7 @@ public class MainScreen extends JPanel{
 			
 		case LOGIN_SCREEN:
 			centerPanel=new LoginScreen();
+			((LoginScreen)centerPanel).addResponder(this);
 			break;
 		}
 		add(centerPanel, BorderLayout.CENTER);
@@ -91,5 +92,14 @@ public class MainScreen extends JPanel{
 			
 			add(new FixedSizeImageDisplay("res/img/GroupLogo.png", 300, 350), BorderLayout.NORTH);
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public void respondToLogin(String source, String username, String password) {
+		centerPanel=new GradesOverview();
+		repaint();
 	}
 }

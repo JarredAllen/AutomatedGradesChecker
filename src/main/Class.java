@@ -19,7 +19,7 @@ class Class {
 	private int period;
 
 	private String name;
-	private double grade;
+	private String grade;
 	private String dateUpdated;
 	
 	static {
@@ -44,7 +44,7 @@ class Class {
 	 * @param grade The grade the user has in the class
 	 * @param dateUpdated The last time grades were updated
 	 */
-	public Class(int period, String name, double grade, String dateUpdated) {
+	public Class(int period, String name, String grade, String dateUpdated) {
 		this.period=period;
 		this.name=name.replace(' ', '_');
 		this.grade=grade;
@@ -59,7 +59,7 @@ class Class {
 	public boolean equals(Object obj) {
 		if(obj instanceof Class) {
 			Class oc=(Class)obj;
-			return period==oc.period && name.equals(oc.name) && oc.grade==grade && dateUpdated.equals(oc.dateUpdated);
+			return period==oc.period && name.equals(oc.name) && grade.equals(oc.grade) && dateUpdated.equals(oc.dateUpdated);
 		}
 		return false;
 	}
@@ -77,7 +77,7 @@ class Class {
 	 */
 	@Override
 	public String toString() {
-		return String.format("%d %s %f %s", period, name, grade, dateUpdated);
+		return String.format("%d %s %s %s", period, name, grade, dateUpdated);
 	}
 	
 	//getters and setters
@@ -98,11 +98,11 @@ class Class {
 		this.name = name;
 	}
 
-	public double getGrade() {
+	public String getGrade() {
 		return grade;
 	}
 
-	public void setGrade(double grade) {
+	public void setGrade(String grade) {
 		this.grade = grade;
 	}
 
@@ -125,6 +125,6 @@ class Class {
 	 */
 	public static Class fromString(String str) {
 		String[] next=str.split(" ");
-		return new Class(Integer.parseInt(next[0]), next[1], Double.parseDouble(next[2]), next[3]);
+		return new Class(Integer.parseInt(next[0]), next[1], next[2], next[3]);
 	}
 }
