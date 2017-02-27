@@ -23,8 +23,8 @@ import web.LoadCredentialsFromFile;
 /**
  * A JPanel that shows the login screen for the user to log in.
  * 
- * @author Jarred
- * @version 2/26/2017
+ * @author Jarred, Jason
+ * @version 2/27/2017
  * @since 2/9/2017
  */
 @SuppressWarnings("serial")
@@ -88,6 +88,8 @@ public class LoginScreen extends JPanel implements ActionListener {
 	@Override
 	/**
 	 * Should only be called when the user submits
+	 *
+	 * @param e notice for event done
 	 */
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println(responders);
@@ -125,11 +127,14 @@ public class LoginScreen extends JPanel implements ActionListener {
 	/**
 	 * Interface to be implemented by any class that needs to respond to login events
 	 * 
-	 * @author Jarred
-	 * @version 2/12/2017
+	 * @author Jarred, Jason
+	 * @version 2/27/2017
 	 * @since 2/9/2017
 	 */
 	public interface LoginResponder {
+		/**
+		 * Possible response to Logins and/or error
+		 */
 		void respondToLogin(String source, String username, String password);
 	}
 	
