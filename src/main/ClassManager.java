@@ -19,6 +19,7 @@ import java.util.Scanner;
  * @since 2/26/2017
  */
 public class ClassManager {
+	
 	private ArrayList<Class> classes;
 	
 	public ClassManager(Class[] classes) {
@@ -84,6 +85,19 @@ public class ClassManager {
 	//Static methods and fields
 
 	public static final String lastDataFile="res/txt/SavedData.txt";
+	private static ClassManager currentClasses=null;
+	
+	/**
+	 * Retrieve the current classes of the user
+	 * 
+	 * @return A ClassManager representing all of the current classes or null, if the user is not logged in
+	 */
+	public static ClassManager getCurrentClasses() {
+		if(currentClasses==null) {
+			//TODO Initialize this
+		}
+		return currentClasses;
+	}
 	
 	/**
 	 * Loads the saved data from the last time it was run
@@ -102,7 +116,7 @@ public class ClassManager {
 		}
 		catch (FileNotFoundException e) {
 			//The file does not exist, so I return null due to no such classes existing
-			//Please do not 
+			//Please do not dereference this 
 			return null;
 		}
 	}

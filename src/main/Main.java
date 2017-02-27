@@ -86,7 +86,6 @@ public final class Main {
 		frame.setVisible(true);
 		loadingScreen.setVisible(false);
 		loadingScreen.dispose();
-		//TODO Implement the rest of Main.main()
 	}
 	
 	@SuppressWarnings("unused")

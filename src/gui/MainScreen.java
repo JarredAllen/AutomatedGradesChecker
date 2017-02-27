@@ -11,7 +11,7 @@ import gui.tools.FixedSizeImageDisplay;
  * The class that handles the main window of the application once it loads.
  * 
  * @author Jarred
- * @version 2/12/2017
+ * @version 2/26/2017
  * @since 1/14/2017
  */
 public class MainScreen extends JPanel{
@@ -25,7 +25,7 @@ public class MainScreen extends JPanel{
 	 * Creates a new MainScreen object
 	 */
 	public MainScreen() {
-		this(LOGIN_SCREEN);
+		this(MENU_SCREEN);
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class MainScreen extends JPanel{
 			
 		case LOGIN_SCREEN:
 			centerPanel=new LoginScreen();
-			//TODO: Insert a center panel based on the selection of the user for their screen.
+			break;
 		}
 		add(centerPanel, BorderLayout.CENTER);
 	}

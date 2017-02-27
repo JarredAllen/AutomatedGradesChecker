@@ -1,6 +1,7 @@
 package main;
 
 import test.DebugLog;
+import web.LoadCredentialsFromFile;
 
 /**
  * A class that handles loading the required data and then stores it for parts of the program to recall later.
@@ -13,15 +14,20 @@ public class Loader implements Runnable{
 
 	private boolean isLoaded;
 	
+	public boolean hasCredentials;
+	
 	public Loader() {
 		isLoaded=false;
+		hasCredentials=false;
 	}
 	
 	@Override
 	public void run() {
-		// TODO Load everything into memory.
+		if(LoadCredentialsFromFile.hasLoginCredentials()) {
+			hasCredentials=true;
+		}
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		}
 		catch(InterruptedException ie) {}
 		DebugLog.logStatement("About to wake up Main. (concurrency)", DebugLog.CONCURRENCY_LOG_CODE);

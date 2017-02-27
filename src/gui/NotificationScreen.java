@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -17,10 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import gui.tools.TransparentJPanel;
+import main.Main;
 
 /**
  * @author Jarred
- * @version 2/25/2017
+ * @version 2/26/2017
  * @since 2/25/2017
  */
 @SuppressWarnings("serial")
@@ -85,11 +87,9 @@ public class NotificationScreen extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(arg0.getActionCommand().equals("exit")) {
-			parent.dispose();
-		}
-		else {
-			//TODO Show the user their grades
+		parent.dispose();
+		if(arg0.getActionCommand().equals("Check")) {
+			Main.main(new String[0]);
 		}
 	}
 
