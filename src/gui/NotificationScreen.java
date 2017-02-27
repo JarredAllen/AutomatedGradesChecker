@@ -37,19 +37,23 @@ public class NotificationScreen extends JPanel implements ActionListener {
 		//set up the frame
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder());
-		JLabel text=new JLabel("Your grades have changed!");
+		JButton text=new JButton("Your grades have changed!");
+		text.setActionCommand("Check");
 		text.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 		text.setForeground(Color.green);
+		text.addActionListener(this);
+		text.setContentAreaFilled(false);
 		add(text, BorderLayout.CENTER);
 		
 		TransparentJPanel topPanel=new TransparentJPanel();
 		topPanel.setLayout(new BorderLayout());
-		JButton button=new JButton();
-		button.setIcon(new ImageIcon("res/img/X.png"));
-		button.addActionListener(this);
-		button.setBorderPainted(false);
-		button.setContentAreaFilled(false);
-		topPanel.add(button, BorderLayout.EAST);
+		JButton exitButton=new JButton();
+		exitButton.setActionCommand("exit");
+		exitButton.setIcon(new ImageIcon("res/img/X.png"));
+		exitButton.addActionListener(this);
+		exitButton.setBorderPainted(false);
+		exitButton.setContentAreaFilled(false);
+		topPanel.add(exitButton, BorderLayout.EAST);
 		add(topPanel, BorderLayout.NORTH);
 	}
 	
@@ -81,7 +85,12 @@ public class NotificationScreen extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		parent.dispose();
+		if(arg0.getActionCommand().equals("exit")) {
+			parent.dispose();
+		}
+		else {
+			//TODO Show the user their grades
+		}
 	}
 
 }

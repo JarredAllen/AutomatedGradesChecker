@@ -6,7 +6,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -46,6 +45,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 			Process p=Runtime.getRuntime().exec(String.format("python src/python/fjuhsdConnect.py %s %s", 
 													credentials[0], credentials[1]));
 			Scanner input=new Scanner(p.getInputStream());
+			Scanner err=new Scanner(p.getErrorStream());
 			try {
 				p.waitFor();
 			}
@@ -55,11 +55,18 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 					System.exit(1);
 				}
 			}
+			if(err.hasNext()) {
+				input.close();
+				err.close();
+				System.out.println("Python process threw an exception");
+				throw new IOException("Python process threw an exception");
+			}
 			String a=input.next();
 			String b=input.next();
 			String[] c={a,b};
 			cookies=c;
 			input.close();
+			err.close();
 			loggedIn=true;
 		}
 		catch (IOException e) {
@@ -72,7 +79,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 				System.exit(1);
 			}
 		}
-		System.out.println(Arrays.asList(cookies));
+		//System.out.println(Arrays.asList(cookies));
 	}
 	
 	public String[] getCredentials() {
@@ -148,22 +155,28 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 	 * @inheritDoc
 	 */
 	public ClassManager fillInGrades() {
-		if(!loggedIn) {
-			login();
-		}
 		String data=getMainGradesPage();
 		Document page=Jsoup.parse(data);
-		Element gradesTable=page.getElementById("ctl00_MainContent_subGBS_tblEverything");
-		Elements rows=gradesTable.getElementsByTag("tr");
-		ArrayList<Element> relevantRows=new ArrayList<>();
+		Element gradesTable=page.getElementById("ctl00_MainContent_subGBS_tblEverything");//ctl00_MainContent_subGBS_DataDetails_ctl00_trHeader
+		StringBuilder classes=new StringBuilder();
+		gradesTable=gradesTable.children().first().children().first().children().first().children().first().children().get(0);
+													//Just moving down the hierarchy to the grades
+		gradesTable=gradesTable.children().get(0).children().first().children().first().children().first();
+		ArrayList<Element>rows=gradesTable.children();
+		rows.remove(0);
 		for(Element e:rows) {
 			if(e.id().equals("ctl00_MainContent_subGBS_DataDetails_ctl08_trPriorTermHeading")) {
 				break;
 			}
-			relevantRows.add(e);
+			Elements entries=e.children();
+			String period=entries.get(4).text().replace(' ', '_');
+			String courseName=entries.get(2).text().replace(' ', '_');
+			String grade=entries.get(6).children().first().text().replace(' ', '_');
+			String date=entries.get(12).text().replace(' ', '_');
+			classes.append(period+" "+courseName+" "+grade+" "+date+" \n");
 		}
-		String classes="";
-		return ClassManager.getClassManagerFromString(classes);
+		
+		return ClassManager.getClassManagerFromString(classes.toString());
 	}
 	
 	private void prepareConnection(HttpURLConnection con) throws ProtocolException {

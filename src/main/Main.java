@@ -9,7 +9,7 @@ import java.awt.Dimension;
 
 import gui.LoadingScreen;
 import gui.MainScreen;
-
+import gui.NotificationScreen;
 import test.DebugLog;
 import web.LoadCredentialsFromFile;
 import web.WebConnectionManager;
@@ -46,9 +46,13 @@ public final class Main {
 	public static void main(String[] args) {
 		ah=new ArgumentHolder(args);
 		if(ah.containsOption("-c")||ah.containsOption("--justcheck")) {
+			//System.out.println("Only checking");
 			if(LoadCredentialsFromFile.hasLoginCredentials()) {
 				WebConnectionManager conn=new WebConnectionManager.Builder(LoadCredentialsFromFile.getGradesInfoSource()).build();
-				
+				ClassManager current=conn.fillInGrades();
+				if(!current.equals(ClassManager.getSavedClasses())) {
+					NotificationScreen.createNewNotificationScreen();
+				}
 			}
 			//if it does not, we are done here
 			return;
