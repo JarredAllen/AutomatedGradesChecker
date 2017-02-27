@@ -23,8 +23,8 @@ import main.ClassManager;
 import main.Main;
 
 /**
- * @author Jarred
- * @version 2/26/2017
+ * @author Jarred, Jason
+ * @version 2/27/2017
  * @since 2/25/2017
  */
 @SuppressWarnings("serial")
@@ -39,6 +39,12 @@ public class NotificationScreen extends JPanel implements ActionListener {
 	//text instanceof JButton
 	//and increase the scope of text so that it can be used as an instance variable
 	
+	/**
+	 * Constructor for NotificationScreen
+	 *
+	 * @param parent provides JFrame for displaces
+	 * @param advanceToMenuScreen determines the next process for screen
+	 */
 	public NotificationScreen(JFrame parent, boolean advanceToMenuScreen) {
 		//set up variables
 		backgroundImage=new ImageIcon("res/img/background.png").getImage();
@@ -76,11 +82,18 @@ public class NotificationScreen extends JPanel implements ActionListener {
 	}
 	
 	@Override
+	/**
+	 * @inheritDoc
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 	}
-	
+	/**
+	 * Maintains updated Notification Screen
+	 * 
+	 * @param advanceToMenuScreen determines if process is proceeded
+	 */
 	public static void createNewNotificationScreen(boolean advanceToMenuScreen) {
 		JFrame frame=new JFrame("Automated Grades Checker");
 		NotificationScreen scr=new NotificationScreen(frame, advanceToMenuScreen);
@@ -102,6 +115,9 @@ public class NotificationScreen extends JPanel implements ActionListener {
 	}
 
 	@Override
+	/**
+	 * @inheritDoc
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getActionCommand().equals("Check")) {
 			ClassManager.getCurrentClasses().writeClassesToFile();
