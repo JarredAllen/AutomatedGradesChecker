@@ -39,6 +39,7 @@ public class LoadCredentialsFromFile {
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
+			System.out.println(new File(credentialsFileLocation).getAbsolutePath());
 			System.exit(2);
 		}
 		return false;
