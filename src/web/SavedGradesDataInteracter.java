@@ -2,6 +2,11 @@ package web;
 
 import java.util.Scanner;
 
+/**
+ * 
+ * @author Jarred
+ * @deprecated
+ */
 public class SavedGradesDataInteracter {
 	public static final String lastDataFile="res/txt/SavedData.txt";
 	
@@ -12,7 +17,7 @@ public class SavedGradesDataInteracter {
 		}
 		String line=input.nextLine();
 		while(line!=null) {
-			//TODO Pull needed data out of the HTML and move to the next line
+			//TOqDO Pull needed data out of the HTML and move to the next line
 			line=input.nextLine();
 		}
 		input.close();
