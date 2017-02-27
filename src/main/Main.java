@@ -54,7 +54,8 @@ public final class Main {
 					NotificationScreen.createNewNotificationScreen(true);
 				}
 			}
-			//if it does not, we are done here
+			//if it does not have credentials, we are done here
+			//since this should be background in this case, there is nothing more that can be done
 			return;
 		}
 		JFrame loadingScreen=new JFrame();

@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import gui.tools.TransparentJPanel;
+
 import main.ClassManager;
 import main.Main;
 

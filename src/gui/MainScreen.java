@@ -49,12 +49,17 @@ public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
 		}
 		add(centerPanel, BorderLayout.CENTER);
 	}
-	
+
 	/**
-	 * 
+	 * @inheritDoc
 	 */
-	public void showLoginScreen(LoginScreen.LoginResponder lr) {
-		
+	@Override
+	public void respondToLogin(String source, String username, String password) {
+		System.out.println("Beginning to respond");
+		centerPanel=new GradesOverview();
+		add(centerPanel, BorderLayout.CENTER);
+		revalidate();
+		System.out.println("Response finished");
 	}
 	
 	//Constants because magic numbers are bad
@@ -92,14 +97,5 @@ public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
 			
 			add(new FixedSizeImageDisplay("res/img/GroupLogo.png", 300, 350), BorderLayout.NORTH);
 		}
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	@Override
-	public void respondToLogin(String source, String username, String password) {
-		centerPanel=new GradesOverview();
-		repaint();
 	}
 }
