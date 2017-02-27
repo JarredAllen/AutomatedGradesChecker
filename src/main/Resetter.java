@@ -13,19 +13,24 @@ import javax.swing.JOptionPane;
  */
 public class Resetter {
 
-	/**
-	 * Reset any data in the project to blank
-	 * 
-	 * @param args Ignored command line parameters
-	 */
-	public static void main(String[] args) {
-		int option=JOptionPane.showConfirmDialog(null, null, "Reset Application", JOptionPane.OK_CANCEL_OPTION);
+	public static final void reset() {
+		int option=JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?\n"+
+								"You will exit this application.", "Log Out", JOptionPane.OK_CANCEL_OPTION);
 		if(option==JOptionPane.OK_OPTION) {
 			File f=new File("res/txt");
 			for(File txt:f.listFiles()) {
 				txt.delete();
 			}
 		}
+	}
+	
+	/**
+	 * Reset any data in the project to blank
+	 * 
+	 * @param args Ignored command line parameters
+	 */
+	public static void main(String[] args) {
+		reset();
 	}
 
 }

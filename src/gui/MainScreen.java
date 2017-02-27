@@ -1,11 +1,15 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import gui.tools.FixedSizeImageDisplay;
+import main.Resetter;
 
 /**
  * The class that handles the main window of the application once it loads.
@@ -55,11 +59,11 @@ public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
 	 */
 	@Override
 	public void respondToLogin(String source, String username, String password) {
-		System.out.println("Beginning to respond");
+		//System.out.println("Beginning to respond");
 		centerPanel=new GradesOverview();
 		add(centerPanel, BorderLayout.CENTER);
 		revalidate();
-		System.out.println("Response finished");
+		//System.out.println("Response finished");
 	}
 	
 	//Constants because magic numbers are bad
@@ -84,8 +88,8 @@ public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
 	 * @version 1/14/2017
 	 * @since 1/14/2017
 	 */
-	private class NorthSubPanel extends JPanel{
-		private static final long serialVersionUID = 1L;
+	@SuppressWarnings("serial")
+	private class NorthSubPanel extends JPanel implements ActionListener {
 
 		/**
 		 * Create a new NorthSubPanel
@@ -93,9 +97,19 @@ public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
 		public NorthSubPanel() {
 			setLayout(new BorderLayout());
 			JLabel label=new JLabel("Welcome.");
-			add(label);
+			add(label, BorderLayout.WEST);
+			
+			JButton logout=new JButton("Logout");
+			logout.addActionListener(this);
+			add(logout, BorderLayout.EAST);
 			
 			add(new FixedSizeImageDisplay("res/img/GroupLogo.png", 300, 350), BorderLayout.NORTH);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			Resetter.reset();
+			System.exit(0);
 		}
 	}
 }

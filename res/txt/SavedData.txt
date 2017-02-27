@@ -1,7 +1,0 @@
-0 AP-US_Hist 89.25 Feb_23
-1 French-IB_SL 97.42 Feb_24
-2 PE_March_Band 100.00 Dec_14
-3 AP_Physics_2 61.04 Feb_22
-4 AP-Calculus_BC 91.30 Feb_23
-5 5_Comp_Sci_IB_SL 99.46 Feb_24
-6 English_IB-SL 97.77 Feb_21
