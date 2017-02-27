@@ -17,14 +17,18 @@ import main.ClassManager;
 /**
  * A JPanel that displays all of the user's classes and the user's current grades in the class
  * 
- * @author Jarred
- * @version 2/6/2017
+ * @author Jarred, Jason
+ * @version 2/27/2017
  * @since 2/6/2017
  */
 @SuppressWarnings("serial")
 public class GradesOverview extends JPanel {
 	
-	public GradesOverview() {
+	/**
+	 * Constructor for GradesOverview
+	 * Initialize necessary instance variables
+	 */
+	public GradesOverview() {  	
 		setLayout(new BorderLayout());
 		
 		JPanel listOfGrades=new JPanel();
@@ -40,6 +44,11 @@ public class GradesOverview extends JPanel {
 		add(listOfGrades, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Testing purpose on Eclipse to avoid errors
+	 *
+	 * @param args Ignored command-line parameter
+	 */
 	public static void main(String[] args) {
 		JFrame frame=new JFrame("Automated Grades Checker");
 		frame.setContentPane(new GradesOverview());
