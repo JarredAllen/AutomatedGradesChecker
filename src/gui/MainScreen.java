@@ -14,8 +14,8 @@ import main.Resetter;
 /**
  * The class that handles the main window of the application once it loads.
  * 
- * @author Jarred
- * @version 2/26/2017
+ * @author Jarred, Jason
+ * @version 2/27/2017
  * @since 1/14/2017
  */
 public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
@@ -107,6 +107,9 @@ public class MainScreen extends JPanel implements LoginScreen.LoginResponder {
 		}
 
 		@Override
+		/**
+		 * @inheritDoc
+		 */
 		public void actionPerformed(ActionEvent arg0) {
 			Resetter.reset();
 			System.exit(0);
