@@ -25,6 +25,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import main.ClassManager;
+
 /**
  * Retrieves grades from the Aeries site maintained by FJUHSD.
  * 
@@ -256,9 +258,8 @@ public final class SecondFJUHSDAeriesConnectionManager implements WebConnectionM
 	/**
 	 * @inheritDoc
 	 */
-	public void fillInGrades() {
-		@SuppressWarnings("unused")
-		String data=getMainGradesPage();
+	public ClassManager fillInGrades() {
+		return null;
 	}
 	
 	private void prepareConnection(HttpURLConnection con) throws ProtocolException {

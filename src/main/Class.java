@@ -1,20 +1,20 @@
 package main;
 
+/*
+ * See comment in static{} block
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+*/
 
 /**
  * A class that handles storing information on the user's classes
  * 
  * @author Jarred
- * @version 2/6/2017
+ * @version 2/26/2017
  * @since 2/6/2017
  */
-public class Class implements Comparable<Class>{
-	
-	
-	private static ArrayList<Class> classes;
+class Class {
 	
 	private int period;
 
@@ -23,7 +23,8 @@ public class Class implements Comparable<Class>{
 	private String dateUpdated;
 	
 	static {
-		classes=new ArrayList<Class>();
+		//commented out in case I want to re-implement this functionality
+		//classes=new ArrayList<Class>();
 		
 		/*
 		 * Commented out code because this is just to be used for testing purposes
@@ -36,7 +37,7 @@ public class Class implements Comparable<Class>{
 	}
 	
 	/**
-	 * Properly instantiate a new Class object
+	 * Properly instantiate a new Class object. Note that it may replace spaces with underscores for string arguments
 	 * 
 	 * @param period The period of the class
 	 * @param name The class name
@@ -45,15 +46,41 @@ public class Class implements Comparable<Class>{
 	 */
 	public Class(int period, String name, double grade, String dateUpdated) {
 		this.period=period;
-		this.name=name;
+		this.name=name.replace(' ', '_');
 		this.grade=grade;
-		this.dateUpdated=dateUpdated;
-		classes.add(this);
+		this.dateUpdated=dateUpdated.replace(' ', '_');
 	}
 	
-	public int compareTo(Class c) {
-		return this.period-c.period;
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Class) {
+			Class oc=(Class)obj;
+			return period==oc.period && name.equals(oc.name) && oc.grade==grade && dateUpdated.equals(oc.dateUpdated);
+		}
+		return false;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public int hashCode() {
+		return period+new Double(grade).hashCode()+name.hashCode()+dateUpdated.hashCode();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public String toString() {
+		return String.format("%d %s %f %s", period, name, grade, dateUpdated);
+	}
+	
+	//getters and setters
 
 	public int getPeriod() {
 		return period;
@@ -87,10 +114,17 @@ public class Class implements Comparable<Class>{
 		this.dateUpdated = dateUpdated;
 	}
 	
+	
+	//Static fields and methods
 	/**
-	 * @return A list of all current class objects
+	 * Produces a new Class object from the given string.
+	 * <p><strong>Warning:</strong> It has undefined behavior if the string is not from a Class.toString() call
+	 * 
+	 * @param str The string from which a new Class object is to be built
+	 * @return A class object equal to the one represented by the string
 	 */
-	public static List<Class> listAllClasses() {
-		return Collections.unmodifiableList(classes);
+	public static Class fromString(String str) {
+		String[] next=str.split(" ");
+		return new Class(Integer.parseInt(next[0]), next[1], Double.parseDouble(next[2]), next[3]);
 	}
 }

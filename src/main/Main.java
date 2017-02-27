@@ -18,7 +18,7 @@ import web.WebConnectionManager;
  * The class that the application runs immediately upon startup.
  * 
  * @author Jarred
- * @version 2/12/2017
+ * @version 2/26/2017
  * @since 1/14/2017
  */
 public final class Main {
@@ -48,6 +48,7 @@ public final class Main {
 		if(ah.containsOption("-c")||ah.containsOption("--justcheck")) {
 			if(LoadCredentialsFromFile.hasLoginCredentials()) {
 				WebConnectionManager conn=new WebConnectionManager.Builder(LoadCredentialsFromFile.getGradesInfoSource()).build();
+				
 			}
 			//if it does not, we are done here
 			return;

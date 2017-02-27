@@ -1,10 +1,12 @@
 package web;
 
+import main.ClassManager;
+
 /**
  * An interface for connecting to the grades online
  * 
  * @author Jarred
- * @version 2/9/2017
+ * @version 2/26/2017
  * @since 2/6/2017
  */
 public interface WebConnectionManager {
@@ -19,7 +21,7 @@ public interface WebConnectionManager {
 	/**
 	 * Builds all of the appropriate Class objects for the user's schedule
 	 */
-	void fillInGrades();
+	ClassManager fillInGrades();
 	
 	/**
 	 * 

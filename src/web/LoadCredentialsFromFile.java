@@ -10,7 +10,7 @@ import java.util.Scanner;
  * A class that deals with login credentials being stored on and written to a file.
  * 
  * @author Jarred
- * @version 2/12/2017
+ * @version 2/26/2017
  * @since 2/12/2017
  */
 public class LoadCredentialsFromFile {

@@ -24,7 +24,7 @@ import web.LoadCredentialsFromFile;
  * A JPanel that shows the login screen for the user to log in.
  * 
  * @author Jarred
- * @version 2/13/2017
+ * @version 2/26/2017
  * @since 2/9/2017
  */
 @SuppressWarnings("serial")

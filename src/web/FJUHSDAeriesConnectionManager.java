@@ -5,12 +5,20 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import main.ClassManager;
 
 /**
  * A class to automatically connect to Aeries and read the grades
@@ -52,6 +60,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 			String[] c={a,b};
 			cookies=c;
 			input.close();
+			loggedIn=true;
 		}
 		catch (IOException e) {
 			//Unless this is a one-off thing, I don't see how it can recover
@@ -67,17 +76,23 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 	}
 	
 	public String[] getCredentials() {
-		if(LoadCredentialsFromFile.hasLoginCredentials()) {
-			return new String[0];
+		String[]streetCred= new String[2];
+		if("FJUHSD_Aeries".equals(LoadCredentialsFromFile.getGradesInfoSource())) {
+			streetCred[0]=LoadCredentialsFromFile.getRememberedUsername();
+			streetCred[1]=LoadCredentialsFromFile.getRememberedPassword();
 		}
-		JTextField username = new JTextField();
-		JTextField password = new JPasswordField();
-		Object[] message = {"Username:", username, "Password:", password};
-		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
-		while (option != JOptionPane.OK_OPTION) {
-			option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+		else {
+			JTextField username = new JTextField();
+			JTextField password = new JPasswordField();
+			Object[] message = {"Username:", username, "Password:", password};
+			int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+			while (option != JOptionPane.OK_OPTION) {
+				option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+			}
+			streetCred[0]=username.getText();
+			streetCred[1]=password.getText();
 		}
-		return new String[0];
+		return streetCred;
 	}
 	
 	public String getLoginPage() {
@@ -109,8 +124,9 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 			login();
 		}
 		try {
-			URL login = new URL(aeriesLoginURL);
-			URLConnection connection=login.openConnection();
+			URL grades = new URL(aeriesGradesURL);
+			URLConnection connection=grades.openConnection();
+			prepareConnection((HttpURLConnection)connection);
 			connection.connect();
 			Scanner page=new Scanner(connection.getInputStream());
 			String buffer="";
@@ -131,16 +147,27 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 	/**
 	 * @inheritDoc
 	 */
-	public void fillInGrades() {
-		@SuppressWarnings("unused")
+	public ClassManager fillInGrades() {
+		if(!loggedIn) {
+			login();
+		}
 		String data=getMainGradesPage();
-		//TODO Finish this and remove the warning for unused data 
+		Document page=Jsoup.parse(data);
+		Element gradesTable=page.getElementById("ctl00_MainContent_subGBS_tblEverything");
+		Elements rows=gradesTable.getElementsByTag("tr");
+		ArrayList<Element> relevantRows=new ArrayList<>();
+		for(Element e:rows) {
+			if(e.id().equals("ctl00_MainContent_subGBS_DataDetails_ctl08_trPriorTermHeading")) {
+				break;
+			}
+			relevantRows.add(e);
+		}
+		String classes="";
+		return ClassManager.getClassManagerFromString(classes);
 	}
 	
 	private void prepareConnection(HttpURLConnection con) throws ProtocolException {
 		con.setRequestProperty("Cookie", getAllCookies());
-		con.setUseCaches(false);
-		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		con.setRequestProperty("User-Agent", userAgent);
 	}
 	
@@ -173,7 +200,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 	 * @param args An ignored parameter
 	 */
 	public static void main(String[] args) {
-		new FJUHSDAeriesConnectionManager();
+		System.out.println(new FJUHSDAeriesConnectionManager().fillInGrades());
 	}
 
 }

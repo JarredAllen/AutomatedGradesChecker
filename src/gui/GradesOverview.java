@@ -1,13 +1,13 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+//import java.awt.GridLayout;
 
-import java.util.List;
+//import java.util.List;
 
-import main.Class;
+//import main.Class;
 
-import javax.swing.JLabel;
+//import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -22,8 +22,7 @@ public class GradesOverview extends JPanel {
 	
 	public GradesOverview() {
 		setLayout(new BorderLayout());
-		
-		List<Class> classes=Class.listAllClasses();
+		/*List<Class> classes=Class.listAllClasses();
 		
 		JPanel listOfGrades=new JPanel();
 		listOfGrades.setLayout(new GridLayout(classes.size(), 3));
@@ -33,6 +32,7 @@ public class GradesOverview extends JPanel {
 			listOfGrades.add(new JLabel(String.format("%.01f",c.getGrade()*100)+"%"));
 		}
 		add(listOfGrades, BorderLayout.CENTER);
+		*/
 	}
 	
 }

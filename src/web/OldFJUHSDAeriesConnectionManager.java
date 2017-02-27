@@ -1,17 +1,22 @@
 package web;
 
 import java.io.IOException;
+
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+
 import java.nio.charset.StandardCharsets;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import main.ClassManager;
 
 import test.DebugLog;
 
@@ -99,13 +104,12 @@ public class OldFJUHSDAeriesConnectionManager implements WebConnectionManager {
 		return null;
 	}
 	
-	@SuppressWarnings("unused")
 	@Override
 	/**
 	 * @inheritDoc
 	 */
-	public void fillInGrades() {
-		String data=getMainGradesPage();
+	public ClassManager fillInGrades() {
+		return null;
 	}
 	
 	//Constants
