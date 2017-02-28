@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
  * A class used to reset the project to its blank state, as though it has never been used
  * 
  * @author Jarred
- * @version 2/26/2017
+ * @version 2/27/2017
  * @since 2/26/2017
  */
 public class Resetter {

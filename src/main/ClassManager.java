@@ -19,7 +19,7 @@ import web.WebConnectionManager;
  * A class used to keep track of sets of classes
  * 
  * @author Jarred
- * @version 2/26/2017
+ * @version 2/27/2017
  * @since 2/26/2017
  */
 public class ClassManager {
@@ -54,6 +54,7 @@ public class ClassManager {
 	
 	/**
 	 * @inheritDoc
+	 * <p>This is a a method that has both a parameter and a return value
 	 */
 	@Override
 	public boolean equals(Object obj) {

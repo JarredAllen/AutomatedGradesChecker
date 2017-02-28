@@ -8,7 +8,8 @@ import java.util.List;
 */
 
 /**
- * A class that handles storing information on the user's classes
+ * A class that handles storing information on the user's classes.
+ * <p>This class is a user-defined class that stores a record, so it meets two master requirements.
  * 
  * @author Jarred
  * @version 2/26/2017
@@ -57,7 +58,7 @@ class Class {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof Class) {
+		if(obj instanceof Class) {//simple selection
 			Class oc=(Class)obj;
 			return period==oc.period && name.equals(oc.name) && grade.equals(oc.grade) && dateUpdated.equals(oc.dateUpdated);
 		}

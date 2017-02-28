@@ -23,7 +23,7 @@ import main.ClassManager;
  * A class to automatically connect to Aeries and read the grades
  * 
  * @author Jarred
- * @version 2/26/2017
+ * @version 2/27/2017
  * @since 2/26/2017
  */
 public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
@@ -102,6 +102,11 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 		return streetCred;
 	}
 	
+	/**
+	 * Get the text of the login page by using a while loop to load the entire contents of the page into memory.
+	 * <p>Uses a loop so it meets that mastery requirement.
+	 * @return
+	 */
 	public String getLoginPage() {
 		try {
 			URL login = new URL(aeriesLoginURL);
@@ -153,6 +158,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 	@Override
 	/**
 	 * @inheritDoc
+	 * <p>Uses external library JSoup to fill in the grades
 	 */
 	public ClassManager fillInGrades() {
 		String data=getMainGradesPage();

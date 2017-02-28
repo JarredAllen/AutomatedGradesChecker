@@ -18,21 +18,30 @@ import web.WebConnectionManager;
  * The class that the application runs immediately upon startup.
  * 
  * @author Jarred
- * @version 2/26/2017
+ * @version 2/27/2017
  * @since 1/14/2017
  */
 public final class Main {
 
+	/**
+	 * The class that should be queried if any classes need to know the arguments passed
+	 */
 	public static ArgumentHolder ah;
 
+	/**
+	 * An array (note the mastery factor) storing valid options to be passes as arguments
+	 */
 	public static final String[] parameterlessOtions={"-c", "--just-check", "-d", "--debug"};
 	public static final String[] parameterOptions={};
 	
+	/**
+	 * An object used to lock for concurrency
+	 */
 	public static final Object lock=new Object();
 	
 	
 	/**
-	 * Starts running the application.
+	 * Starts running the application. It includes nested-if statements, so it has complex selection
 	 * 
 	 * <p>Command line arguments that can be passed:
 	 * <table border="1">
