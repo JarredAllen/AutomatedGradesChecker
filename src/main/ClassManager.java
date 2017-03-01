@@ -18,8 +18,8 @@ import web.WebConnectionManager;
 /**
  * A class used to keep track of sets of classes
  * 
- * @author Jarred
- * @version 2/27/2017
+ * @author Jarred, Jason
+ * @version 2/28/2017
  * @since 2/26/2017
  */
 public class ClassManager {
@@ -34,6 +34,9 @@ public class ClassManager {
 		this.classes=new ArrayList<>(classes);
 	}
 	
+	/**
+	 * Writes a new list of Class
+	 */
 	public void writeToSavedClasses() {
 		try {
 			File f=new File(lastDataFile);
