@@ -11,8 +11,8 @@ import java.util.List;
  * A class that handles storing information on the user's classes.
  * <p>This class is a user-defined class that stores a record, so it meets two master requirements.
  * 
- * @author Jarred
- * @version 2/26/2017
+ * @author Jarred, Jason
+ * @version 2/28/2017
  * @since 2/6/2017
  */
 class Class {
@@ -81,36 +81,66 @@ class Class {
 		return String.format("%d %s %s %s", period, name, grade, dateUpdated);
 	}
 	
-	//getters and setters
-
+	
+	/**
+	 * returns value of period
+	 */
 	public int getPeriod() {
 		return period;
 	}
-
+	/**
+	 *Changes value of period
+	 *
+	 * @param period provides value of new period
+	 */
 	public void setPeriod(int period) {
 		this.period = period;
 	}
-
+	
+	/**
+	 * returns value of name
+	 */
 	public String getName() {
 		return name;
 	}
-
+	
+	/**
+	 * Changes name with new String
+	 *
+	 * @param name provides new String for name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	/**
+	 * returns value of grade
+	 */
 	public String getGrade() {
 		return grade;
 	}
-
+	
+	/**
+	 * Changes grade with new String
+	 *
+	 * @param grade provides new String for grade
+	 */
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
 
+	/**
+	 * returns value of dateUpdated
+	 */
 	public String getDateUpdated() {
 		return dateUpdated;
 	}
 
+	/**
+	 * Changes dateUpdated with new String
+	 *
+	 * @param dateUpdated provides new String for dateUpdated
+	 */
 	public void setDateUpdated(String dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
