@@ -52,6 +52,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 			catch (InterruptedException e) {
 				if(p.isAlive()) {
 					//If that is the case, something went horribly wrong, so I just give up
+					e.printStackTrace();
 					System.exit(1);
 				}
 			}
@@ -76,6 +77,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 				logIn(false);
 			}
 			else {
+				e.printStackTrace();
 				System.exit(1);
 			}
 		}
@@ -122,6 +124,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 		}
 		catch (IOException ioe) {
 			//see note on catch in constructor
+			ioe.printStackTrace();
 			System.exit(1);
 		}
 		return "error";
@@ -150,6 +153,7 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 		}
 		catch (IOException ioe) {
 			//see note on catch in constructor
+			ioe.printStackTrace();
 			System.exit(1);
 		}
 		return "error";
