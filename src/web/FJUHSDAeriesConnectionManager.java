@@ -60,6 +60,9 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 				input.close();
 				err.close();
 				System.out.println("Python process threw an exception");
+				while(err.hasNext()) {
+					System.err.println(err.nextLine());
+				}
 				throw new IOException("Python process threw an exception");
 			}
 			String a=input.next();
