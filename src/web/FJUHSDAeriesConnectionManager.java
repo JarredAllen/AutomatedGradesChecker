@@ -171,15 +171,21 @@ public class FJUHSDAeriesConnectionManager implements WebConnectionManager {
 		ArrayList<Element>rows=gradesTable.children();
 		rows.remove(0);
 		for(Element e:rows) {
-			if(e.id().equals("ctl00_MainContent_subGBS_DataDetails_ctl08_trPriorTermHeading")) {
+			if(e.id().equals("ctl00_MainContent_subGBS_DataDetails_ctl09_trPriorTermHeading")) {
 				break;
 			}
 			Elements entries=e.children();
-			String period=entries.get(4).text().replace(' ', '_');
-			String courseName=entries.get(2).text().replace(' ', '_');
-			String grade=entries.get(6).children().first().text().replace(' ', '_');
-			String date=entries.get(12).text().replace(' ', '_');
-			classes.append(period+" "+courseName+" "+grade+" "+date+" \n");
+			try {
+				String period=entries.get(4).text().replace(' ', '_');
+				String courseName=entries.get(2).text().replace(' ', '_');
+				String grade=entries.get(6).children().first().text().replace(' ', '_');
+				String date=entries.get(12).text().replace(' ', '_');
+				classes.append(period+" "+courseName+" "+grade+" "+date+" \n");
+			}
+			catch(IndexOutOfBoundsException ioobe) {
+				ioobe.printStackTrace();
+				System.out.print(entries);
+			}
 		}
 		
 		return ClassManager.getClassManagerFromString(classes.toString());
